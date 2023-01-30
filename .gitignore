@@ -1,0 +1,9 @@
+*cache
+*_files
+figure/*
+[0-9]*.tex
+.Rproj.user
+*.Rproj
+*.log
+.vscode/*
+titlepage.png

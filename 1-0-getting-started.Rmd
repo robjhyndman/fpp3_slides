@@ -1,0 +1,82 @@
+---
+title: "1. Getting started"
+author: ""
+date: "OTexts.org/fpp3/"
+classoption: aspectratio=169
+titlepage: fpp3title.png
+titlecolor: fpp3red
+toc: false
+output:
+  binb::monash:
+    colortheme: monashwhite
+    fig_width: 7.5
+    fig_height: 3.5
+    keep_tex: no
+    includes:
+      in_header: fpp3header.tex
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  cache = TRUE,
+  dev.args = list(pointsize = 11)
+)
+options(digits = 3, width = 88)
+library(tidyverse)
+library(fpp3)
+library(distributional)
+library(patchwork)
+library(gganimate)
+source(here::here("functions.R"))
+```
+
+## Forecasting by maggots
+
+\placefig{0.8}{1.5}{width=8cm}{sheepliverbm}
+
+\begin{textblock}{7}(8.5,1.7)
+\raggedright\large\color{black}
+\textbf{Clay model of sheep's liver}\\[0.4cm]
+Used by Bab\-ylon\-ian forecasters approximately 600 B.C.\\[0.7cm]
+Now in \rlap{British Museum.}
+\end{textblock}
+
+## Forecasting by hallucination
+
+\only<1->{\placefig{0}{1.35}{height=8.25cm, width=20cm}{delphitemple}}
+\only<2>{\placefig{7}{1.35}{height=7.77cm, width=20cm}{1106}}
+
+## Forecasting and the law
+
+\placefig{10.1}{1.35}{width=6cm, height=20cm}{250px-Constance_II_Colosseo_Rome_Italy}
+
+\begin{textblock}{8}(1,1.8)\raggedright
+\begin{block}{}
+\color{black}
+Anyone who consults a soothsayer on account of curiosity of the future will suffer capital punishment.
+
+\mbox{}\hfill\emph{Codex Theodosianus 9.16.4}
+\end{block}
+\end{textblock}
+
+## Reputations can be made and lost
+
+\begin{block}{}
+``I think there is a world market for maybe five computers.'' \newline{\null\hfill\small (Chairman of IBM, 1943)}
+\end{block}
+  \pause
+\begin{alertblock}{}
+``There is no reason anyone would want a computer in their home.'' \newline\null\hfill{\small (President, DEC, 1977)}
+\end{alertblock}
+  \pause
+\begin{block}{}
+“There’s no chance that the iPhone is going to get any significant market share. No chance.”\hfill{\small (Steve Ballmer, CEO Microsoft, April 2007)}
+\end{block}
+  \pause
+\begin{alertblock}{}
+``We're going to be opening relatively soon \dots The virus \dots\ will go away in April.''\hfill{\small (Donald Trump, February 2020)}
+\end{alertblock}
