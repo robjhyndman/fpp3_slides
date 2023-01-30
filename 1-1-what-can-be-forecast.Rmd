@@ -45,10 +45,6 @@ output:
  * total sales of drugs in Australian pharmacies next month
  * timing of next Halley's comet appearance
 
-\pause\begin{alertblock}{}\Large
-\centerline{\textbf{pollev.com/robjhyndman}}
-\end{alertblock}
-
 \vspace*{10cm}
 
 ## Which is easiest to forecast?

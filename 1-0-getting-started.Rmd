@@ -16,27 +16,9 @@ output:
       in_header: fpp3header.tex
 ---
 
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = FALSE,
-  message = FALSE,
-  warning = FALSE,
-  cache = TRUE,
-  dev.args = list(pointsize = 11)
-)
-options(digits = 3, width = 88)
-library(tidyverse)
-library(fpp3)
-library(distributional)
-library(patchwork)
-library(gganimate)
-source(here::here("functions.R"))
-```
-
 ## Forecasting by maggots
 
-\placefig{0.8}{1.5}{width=8cm}{sheepliverbm}
+\placefig{0.3}{1.5}{width=8cm}{sheepliverbm}
 
 \begin{textblock}{7}(8.5,1.7)
 \raggedright\large\color{black}
@@ -47,12 +29,14 @@ Now in \rlap{British Museum.}
 
 ## Forecasting by hallucination
 
-\only<1->{\placefig{0}{1.35}{height=8.25cm, width=20cm}{delphitemple}}
-\only<2>{\placefig{7}{1.35}{height=7.77cm, width=20cm}{1106}}
+\placefig{0}{1.35}{height=8.25cm}{delphitemple}
+\only<2>{\placefig{7}{1.35}{height=7.77cm}{1106}}
+
+\only<1>{\begin{textblock}{4}(11.7,2)\begin{block}{}Temple of Apollo, Delphi, Greece\end{block}\end{textblock}}
 
 ## Forecasting and the law
 
-\placefig{10.1}{1.35}{width=6cm, height=20cm}{250px-Constance_II_Colosseo_Rome_Italy}
+\placefig{10.1}{1.35}{width=6cm}{250px-Constance_II_Colosseo_Rome_Italy}
 
 \begin{textblock}{8}(1,1.8)\raggedright
 \begin{block}{}
