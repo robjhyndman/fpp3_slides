@@ -81,13 +81,13 @@ aus_production |>
 ## Prediction intervals
 \fontsize{10}{12}\sf
 
-```{r brick-fc-interval3, eval=FALSE}
+```{r brick-fc-interval3}
 aus_production |>
   filter(!is.na(Bricks)) |>
   model(Seasonal_naive = SNAIVE(Bricks)) |>
   forecast(h = "5 years") |>
   hilo(level = 95)  |>
-  unpack_hilo("95%")
+  mutate(lower = `95%`$lower, upper=`95%`$upper)
 ```
 
 ## Prediction intervals
