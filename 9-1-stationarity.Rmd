@@ -261,7 +261,7 @@ a10 |> autoplot(
 )
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r, echo=TRUE}
 h02 <- PBS |>
@@ -269,7 +269,7 @@ h02 <- PBS |>
   summarise(Cost = sum(Cost) / 1e6)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r, echo=TRUE}
 h02 |> autoplot(
@@ -277,7 +277,7 @@ h02 |> autoplot(
 )
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r, echo=TRUE}
 h02 |> autoplot(
@@ -285,7 +285,7 @@ h02 |> autoplot(
 )
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r, echo=TRUE}
 h02 |> autoplot(
@@ -293,7 +293,7 @@ h02 |> autoplot(
 )
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r, echo=TRUE}
 h02 |> autoplot(
@@ -301,7 +301,7 @@ h02 |> autoplot(
 )
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 * Seasonally differenced series is closer to being stationary.
 * Remaining non-stationarity can be removed with further first difference.

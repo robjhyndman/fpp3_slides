@@ -175,7 +175,7 @@ forecast(fit, h = 36) |>
   labs(title = "US employment: leisure & hospitality", y = "People (millions)")
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r}
 h02 <- PBS |>
@@ -183,7 +183,7 @@ h02 <- PBS |>
   summarise(Cost = sum(Cost) / 1e6)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r}
 h02 |> autoplot(
@@ -191,7 +191,7 @@ h02 |> autoplot(
 )
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r}
 h02 |> autoplot(
@@ -199,7 +199,7 @@ h02 |> autoplot(
 )
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r}
 h02 |> autoplot(
@@ -207,7 +207,7 @@ h02 |> autoplot(
 )
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r h02b}
 h02 |> gg_tsdisplay(difference(log(Cost), 12),
@@ -215,14 +215,14 @@ h02 |> gg_tsdisplay(difference(log(Cost), 12),
 )
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
   * Choose $D=1$ and $d=0$.
   * Spikes in PACF at lags 12 and 24 suggest seasonal AR(2) term.
   * Spikes in PACF suggests possible non-seasonal AR(3) term.
   * Initial candidate model: ARIMA(3,0,0)(2,1,0)$_{12}$.
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r h02aicc, echo=FALSE}
 models <- list(
@@ -250,7 +250,7 @@ fit |>
   knitr::kable(digits = 2, row.names = FALSE, align = "cc", booktabs = TRUE)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 \fontsize{10}{12}\sf
 
 ```{r arimah02, echo=TRUE}
@@ -259,13 +259,13 @@ fit <- h02 |>
 report(fit)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r h02res, echo=TRUE, fig.height=4, dependson='arimah02'}
 gg_tsresiduals(fit)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 \fontsize{10}{13}\sf
 
 ```{r h02resb, echo = TRUE, fig.height=4, dependson='arimah02'}
@@ -273,7 +273,7 @@ augment(fit) |>
   features(.innov, ljung_box, lag = 36, dof = 6)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 \fontsize{10}{13}\sf
 
 ```{r h02auto, echo=TRUE, fig.height=3.6}
@@ -281,13 +281,13 @@ fit <- h02 |> model(auto = ARIMA(log(Cost)))
 report(fit)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r, echo=TRUE, fig.height=4, dependson='h02auto'}
 gg_tsresiduals(fit)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 \fontsize{10}{13}\sf
 
 ```{r, echo = TRUE, dependson='h02auto'}
@@ -295,7 +295,7 @@ augment(fit) |>
   features(.innov, ljung_box, lag = 36, dof = 3)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 \fontsize{10}{10}\sf
 
 ```{r h02tryharder, echo=TRUE, fig.height=3.6}
@@ -306,13 +306,13 @@ fit <- h02 |>
 report(fit)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r, echo=TRUE, fig.height=4, dependson='h02tryharder'}
 gg_tsresiduals(fit)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 \fontsize{10}{12}\sf
 
 ```{r, echo = TRUE, dependson='h02tryharder'}
@@ -320,7 +320,7 @@ augment(fit) |>
   features(.innov, ljung_box, lag = 36, dof = 9)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 \fontsize{10}{12}\sf
 
 Training data: July 1991 to June 2006
@@ -343,7 +343,7 @@ fit |>
   accuracy(h02)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 \fontsize{13}{15}\sf
 
 ```{r h02-rmse, cache=TRUE, echo=FALSE}
@@ -377,13 +377,13 @@ fit |>
   knitr::kable(digits = 4)
 ```
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
   * Models with lowest AICc values tend to give slightly better results than the other models.
   * AICc comparisons must have the same orders of differencing. But RMSE test set comparisons can involve any models.
   * Use the best model available, even if it does not pass all tests.
 
-## Cortecosteroid drug sales
+## Corticosteroid drug sales
 
 ```{r h02f, echo=TRUE}
 fit <- h02 |>
