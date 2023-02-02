@@ -70,6 +70,6 @@ output:
 Something is easier to forecast if:
 
  1. we have a good understanding of the factors that contribute to it
- 2. there is lots of data available;
+ 2. there is lots of data available
  3. the future is somewhat similar to the past
- 4. the forecasts cannot affect the thing we are trying to forecast.
+ 4. the forecasts cannot affect the thing we are trying to forecast
