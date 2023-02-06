@@ -639,28 +639,9 @@
     },
     "fpp3": {
       "Package": "fpp3",
-      "Version": "0.4.0",
+      "Version": "0.5",
       "Source": "Repository",
-      "Repository": "CRAN",
-      "Hash": "48dd4794b09c1cf8dc1587f78f5819b1",
-      "Requirements": [
-        "cli",
-        "crayon",
-        "dplyr",
-        "fable",
-        "fabletools",
-        "feasts",
-        "ggplot2",
-        "lubridate",
-        "magrittr",
-        "purrr",
-        "rstudioapi",
-        "tibble",
-        "tidyr",
-        "tsibble",
-        "tsibbledata",
-        "urca"
-      ]
+      "Requirements": []
     },
     "fs": {
       "Package": "fs",
