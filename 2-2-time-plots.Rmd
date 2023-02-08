@@ -25,6 +25,16 @@ PBS |>
   mutate(Cost = TotalC / 1e6) -> a10
 ```
 
+## Graphics
+
+\fontsize{16}{18}\sf
+
+- Plots allow us to identify:
+   - Patterns;
+   - Unusual observations;
+   - Changes over time;
+   - Relationships between variables.
+
 ## Time plots
 \fontsize{10}{10}\sf
 
