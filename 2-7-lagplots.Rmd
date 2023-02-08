@@ -21,7 +21,7 @@ source("setup.R")
 ```
 
 ## Example: Beer production
-\fontsize{10}{10}\sf
+\fontsize{9}{9}\sf
 
 ```{r}
 new_production <- aus_production |>
@@ -31,13 +31,7 @@ new_production
 
 ## Example: Beer production
 
-```{r, fig.height=6, fig.width=6, out.width="6.5cm"}
-new_production |> gg_lag(Beer)
-```
-
-## Example: Beer production
-
-```{r, fig.height=6, fig.width=6, out.width="6.5cm"}
+```{r, fig.height=6, fig.width=6, out.width="6.4cm"}
 new_production |> gg_lag(Beer, geom = "point")
 ```
 
@@ -47,3 +41,17 @@ Each graph shows $y_t$ plotted against $y_{t-k}$ for
 different values of $k$.
 \end{block}
 \end{textblock}}
+
+## Example: Beer production
+
+```{r, fig.height=6, fig.width=6, out.width="6.4cm"}
+new_production |> gg_lag(Beer)
+```
+
+
+\begin{textblock}{5}(9,4)
+\begin{block}{}
+Each graph shows $y_t$ plotted against $y_{t-k}$ for
+different values of $k$.
+\end{block}
+\end{textblock}
