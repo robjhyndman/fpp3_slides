@@ -130,5 +130,5 @@ us_retail_employment |>
 * The trend window controls loess bandwidth applied to deasonalised values.
 * The season window controls loess bandwidth applied to detrended subseries.
 * Robustness weights based on remainder.
-* Default season `window = 13`
-* Default trend `window = nextodd(` \newline\mbox{}\hfill `ceiling((1.5*period)/(1-(1.5/s.window)))`
+* Default season: `window = 13`
+* Default trend:\mbox{}\hfill\hbox{\texttt{window = nextodd(ceiling((1.5*period)/(1-(1.5/s.window)))}}
