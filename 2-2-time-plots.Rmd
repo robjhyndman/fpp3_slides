@@ -14,6 +14,8 @@ output:
     keep_tex: no
     includes:
       in_header: fpp3header.tex
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -40,7 +42,8 @@ PBS |>
 
 ```{r}
 a10 |>
-  autoplot(Cost)
+  autoplot(Cost) + 
+  labs(y = "$ (millions)", title = "Australian antidiabetic drug sales")
 ```
 
 ## Ansett airlines
@@ -67,4 +70,16 @@ ansett |>
 ansett |>
   filter(Airports == "MEL-SYD") |>
   autoplot(Passengers)
+```
+
+## Ansett airlines
+\fontsize{10}{10}\sf
+
+```{r echo=FALSE, fig.height=3.8}
+ansett |>
+  filter(Airports == "MEL-SYD", Class == "Economy") |>
+  mutate(Passengers = Passengers/1000) |> 
+  autoplot(Passengers) +
+  labs(title = "Ansett airlines economy class", subtitle = "Melbourne-Sydney", 
+       y = "Passengers ('000)")
 ```

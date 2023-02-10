@@ -33,11 +33,13 @@ Cyclic
 
 ## Time series components
 
-### Differences between seasonal and cyclic patterns:
+\alert{Differences between seasonal and cyclic patterns:}
 
 * seasonal pattern constant length; cyclic pattern variable length
 * average length of cycle longer than length of seasonal pattern
 * magnitude of cycle more variable than magnitude of seasonal pattern
+
+  
 
 ## Time series patterns
 \fontsize{9}{9}\sf

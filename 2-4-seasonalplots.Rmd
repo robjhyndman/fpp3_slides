@@ -14,6 +14,8 @@ output:
     keep_tex: no
     includes:
       in_header: fpp3header.tex
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -23,6 +25,15 @@ PBS |>
   select(Month, Concession, Type, Cost) |>
   summarise(TotalC = sum(Cost)) |>
   mutate(Cost = TotalC / 1e6) -> a10
+```
+
+## Reminder: a10 time plot
+
+\fontsize{10}{10}\sf
+
+```{r, echo=TRUE,fig.height=3}
+a10 |> 
+  autoplot(Cost)
 ```
 
 ## Seasonal plots
@@ -42,11 +53,20 @@ a10 |> gg_season(Cost, labels = "both") +
 ## Quarterly Australian Beer Production
 
 ```{r fig.height=2.8}
-beer <- aus_production |>
-  select(Quarter, Beer) |>
-  filter(year(Quarter) >= 1992)
-beer |> autoplot(Beer)
+beer <- aus_production |> 
+   select(Quarter, Beer) |> filter(year(Quarter) >= 1992)
+beer |> autoplot(Beer) + 
+  labs(title = "Australian beer production", y = "Megalitres") 
 ```
+
+## Quarterly Australian Beer Production
+\fontsize{9}{9}\sf
+
+```{r, fig.height=3}
+beer |> autoplot(Beer) + geom_point() + 
+  labs(title = "Australian beer production", y = "Megalitres") 
+```
+
 
 ## Quarterly Australian Beer Production
 
@@ -60,6 +80,14 @@ beer |> gg_season(Beer, labels = "right")
 ```{r}
 vic_elec
 ```
+
+## Multiple seasonal periods
+\fontsize{9}{9}\sf
+
+```{r}
+vic_elec |> autoplot()
+```
+
 
 ## Multiple seasonal periods
 
