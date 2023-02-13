@@ -93,9 +93,10 @@ holidays |> autoplot(Trips) +
 
 ## Seasonal plots
 
-```{r graphics1, fig.width=5, fig.height=4.7, out.width="45%"}
-holidays |> gg_season(Trips) +
-  labs(y = "thousands of trips", title = "Australian domestic holiday nights")
+```{r graphics1}
+holidays |> gg_season(Trips) + 
+   facet_wrap(vars(State), nrow = 2, scales = "free_y")+
+   labs(y = "thousands of trips", title = "Australian domestic holiday nights")
 ```
 
 ## Seasonal subseries plots
