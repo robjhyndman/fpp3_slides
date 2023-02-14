@@ -7,3 +7,4 @@ figure/*
 *.log
 .vscode/*
 titlepage.png
+.Rhistory
