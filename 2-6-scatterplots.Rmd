@@ -1,0 +1,102 @@
+---
+title: "2. Time series graphics"
+author: "2.6 Scatterplots"
+date: "OTexts.org/fpp3/"
+classoption: aspectratio=169
+titlepage: fpp3title.png
+titlecolor: fpp3red
+toc: false
+output:
+  binb::monash:
+    colortheme: monashwhite
+    fig_width: 7.5
+    fig_height: 3
+    keep_tex: no
+    includes:
+      in_header: fpp3header.tex
+---
+
+```{r setup, include=FALSE}
+source("setup.R")
+```
+
+## Electricity Demand in Victoria, Australia
+
+\fontsize{9}{9}\sf
+
+```{r, echo=TRUE}
+vic_elec_day_type <- vic_elec |> 
+   filter(year(Time) == 2014) |> 
+   mutate(Day_Type = case_when(
+      Holiday ~ "Holiday",
+      wday(Date) %in% 2:6 ~ "Weekday",
+      TRUE ~ "Weekend"))
+vic_elec_day_type
+```
+
+## Time plots
+
+```{r, echo=FALSE, fig.height=3.6}
+vic_elec_day_type |> 
+   select(Temperature, Demand) |> 
+   pivot_longer(-Time) |> 
+   ggplot(aes(Time, value, colour = name)) +
+   geom_line() +
+   facet_grid(name ~ ., scales = "free_y") +
+   guides(colour = "none") +
+   labs(
+    y = "Degrees Celsius                   GW         "
+  )
+
+
+```
+
+## Scatterplots
+
+```{r, echo=TRUE, fig.height=2.2, fig.width=6}
+vic_elec_day_type |> 
+  ggplot(aes(x = Temperature, y = Demand)) +
+  geom_point() + 
+   labs(x = "Temperature (degrees Celsius)", y = "Electricity demand (GW)")
+```
+
+## Scatterplots
+
+```{r, echo=TRUE, fig.height=2.2, fig.width=6}
+vic_elec_day_type |> 
+  ggplot(aes(x = Temperature, y = Demand, colour = Day_Type)) +
+  geom_point() + 
+   labs(x = "Temperature (degrees Celsius)", y = "Electricity demand (GW)")
+```
+
+## Correlation coefficient
+
+Measures the extent of a linear relationship between two variables ($y$ and $x$).
+\vspace{0.4cm}
+
+- $r=\frac{\sum_{t=1}^T(y_t-\bar{y})(x_t-\bar{x})}{\sqrt{\sum_{t=1}^T(y_t-\bar{y})^2} \sqrt{\sum_{t=1}^T(x_t-\bar{x})^2}}$
+
+\begin{textblock}{7}(8,5.2)
+\begin{itemize}
+  \item Lies between -1 and 1
+\end{itemize}
+\end{textblock}
+
+
+## US consumption expenditure
+```{r, echo=FALSE, fig.height=5, fig.width=7.3}
+us_change |>
+   pivot_longer(-Quarter, names_to="Series") |>
+   autoplot(value) +
+   facet_grid(Series ~ ., scales = "free_y") + 
+   labs(y = "% change")
+```
+
+## US consumption expenditure
+
+\vspace{-0.1cm}
+
+```{r, echo=TRUE, fig.height=5}
+us_change |> GGally::ggpairs(columns = 2:6)
+```
+
