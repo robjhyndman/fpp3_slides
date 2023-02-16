@@ -180,7 +180,7 @@ food |>
 ## Box-Cox transformations
 
 ```{r food-bc}
-food |> autoplot(box_cox(Turnover, 0.0524)) +
+food |> autoplot(box_cox(Turnover, 0.0895)) +
   labs(y = "Box-Cox transformed turnover")
 ```
 
