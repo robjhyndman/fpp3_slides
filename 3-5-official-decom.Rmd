@@ -50,17 +50,6 @@ autoplot(x11_dcmp)
 ```
 
 ## X-11 decomposition
-
-```{r, fig.height=2.6}
-x11_dcmp |>
-  ggplot(aes(x = Month)) +
-  geom_line(aes(y = Employed, colour = "Data")) +
-  geom_line(aes(y = season_adjust, colour = "Seasonally Adjusted")) +
-  geom_line(aes(y = trend, colour = "Trend")) +
-  labs(y = "Persons (thousands)", title = "Total employment in US retail")
-  ```
-  
-## X-11 decomposition
 **Advantages**
 
   *  Relatively robust to outliers
@@ -85,14 +74,14 @@ x11_dcmp |>
   *  Holiday factors (e.g., Easter, Labour Day) can be estimated.
 
 ## X-13ARIMA-SEATS
-  
+
 ```{r, fig.height=3.6, fig.width=9}
 seats_dcmp <- us_retail_employment |>
   model(seats = X_13ARIMA_SEATS(Employed ~ seats())) |>
   components()
 autoplot(seats_dcmp)
 ```
-  
+
 ## X-13ARIMA-SEATS
 
 **Advantages**

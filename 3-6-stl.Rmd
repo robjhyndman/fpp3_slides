@@ -76,7 +76,7 @@ us_retail_employment |>
     title = "STL decomposition of US retail employment",
     subtitle = "{closest_state}"
   ) +
-  transition_states(.model)
+  transition_states(.model, wrap=FALSE)
 ```
 
 \vspace*{10cm}
