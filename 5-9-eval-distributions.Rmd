@@ -49,7 +49,7 @@ google_fc |>
   filter(.model == "Mean") |>
   autoplot(bind_rows(google_2015, google_jan_2016)) +
   labs(y = "$US", title = "Google closing stock prices: Mean forecasts") +
-  guides(colour = guide_legend(title = "Forecast")) + ylim(490,880)
+  guides(colour = guide_legend(title = "Forecast")) + ylim(439,880)
 ```
 
 
@@ -60,7 +60,7 @@ google_fc |>
   filter(.model == "Naïve") |>
   autoplot(bind_rows(google_2015, google_jan_2016)) +
   labs(y = "$US", title = "Google closing stock prices: Naïve forecasts") +
-  guides(colour = guide_legend(title = "Forecast")) + ylim(490,880)
+  guides(colour = guide_legend(title = "Forecast")) + ylim(439,880)
 ```
 
 
@@ -71,7 +71,7 @@ google_fc |>
   filter(.model == "Drift") |>
   autoplot(bind_rows(google_2015, google_jan_2016)) +
   labs(y = "$US", title = "Google closing stock prices: Drift forecasts") +
-  guides(colour = guide_legend(title = "Forecast")) + ylim(490,880)
+  guides(colour = guide_legend(title = "Forecast")) + ylim(439,880)
 ```
 
 ## Evaluating quantile forecasts
