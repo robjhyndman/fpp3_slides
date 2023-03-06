@@ -1,0 +1,343 @@
+---
+title: "3. Time series decomposition"
+author: "3.3 Moving averages"
+date: "OTexts.org/fpp3/"
+classoption: aspectratio=169
+titlepage: fpp3title.png
+titlecolor: fpp3red
+toc: false
+output:
+  binb::monash:
+    colortheme: monashwhite
+    fig_width: 7.5
+    fig_height: 3
+    keep_tex: no
+    includes:
+      in_header: fpp3header.tex
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+source("setup.R")
+
+us_retail_employment <- us_employment |>
+  filter(year(Month) >= 1990, Title == "Retail Trade") |>
+  select(-Series_ID)
+```
+
+## Moving averages
+
+The simplest estimate of the trend-cycle uses **moving averages**.
+
+\begin{block}{$m$-MA}
+\[\hat{T}_t = \frac{1}{m} \sum_{j=-k}^k y_{t+j}\]
+\end{block}
+where $k=\frac{m-1}{2}$.
+
+## Moving averages
+
+\fontsize{10}{10}\sf
+
+```{r ressales1, echo=TRUE, cache=TRUE}
+global_economy |> filter(Country == "Australia") |>
+  autoplot(Exports) + 
+  labs(y="% of GDP", title= "Total Australian exports")
+```
+
+## Moving average smoothing
+
+\fontsize{12}{12}\sf
+
+```{r elecma, echo=FALSE, warning=FALSE, cache=TRUE}
+
+format_num <- function(x) ifelse(is.na(x), "", format(x, nsmall = 2))
+options(knitr.kable.NA = '')
+
+aus_exports <- global_economy |>
+  filter(Country == "Australia") |>
+  transmute(Exports, `5-MA` = slider::slide_dbl(Exports, mean,.before = 2, .after = 2, .complete = TRUE)) 
+
+out <- dplyr::bind_rows(
+    head(aus_exports, 8),
+    tail(aus_exports, 8)
+  ) |>
+  as_tibble() |>
+  mutate_if(is.numeric, format_num) 
+
+out[6,]=matrix(rep("...",3),nrow=1)
+
+out <- dplyr::bind_rows(out[1:6,], 
+                        out[11:16,]) |> 
+  knitr::kable(booktabs=TRUE, digits=6)
+#out <- kableExtra::kable_styling(out, latex_options = 'hold_position')
+out
+```
+
+## Moving average smoothing
+
+```{r, echo=FALSE, cache=TRUE, warning=FALSE,message=FALSE}
+aus_exports <- global_economy |>
+  filter(Country == "Australia") |>
+  transmute(Exports, `3-MA` = slider::slide_dbl(Exports, mean,.before = 1, .after = 1, .complete = TRUE))
+
+aus_exports |> 
+  autoplot(Exports) +
+  autolayer(aus_exports,`3-MA`, color = "#D55E00") +
+  labs(y = "% of GDP",
+       title = "Total Australian exports: 3-MA") +
+  guides(colour = guide_legend(title = "series")) 
+```
+
+## Moving average smoothing
+
+```{r, echo=FALSE, cache=TRUE, warning=FALSE,message=FALSE}
+aus_exports <- global_economy |>
+  filter(Country == "Australia") |>
+  transmute(Exports, `5-MA` = slider::slide_dbl(Exports, mean,.before = 2, .after = 2, .complete = TRUE))
+
+aus_exports |> 
+  autoplot(Exports) +
+  autolayer(aus_exports,`5-MA`, color = "#D55E00") +
+  labs(y = "% of GDP",
+       title = "Total Australian exports: 5-MA") +
+  guides(colour = guide_legend(title = "series")) 
+```
+
+## Moving average smoothing
+
+```{r, echo=FALSE, cache=TRUE, warning=FALSE,message=FALSE}
+aus_exports <- global_economy |>
+  filter(Country == "Australia") |>
+  transmute(Exports, `7-MA` = slider::slide_dbl(Exports, mean,.before = 3, .after = 3, .complete = TRUE))
+
+aus_exports |> 
+  autoplot(Exports) +
+  autolayer(aus_exports,`7-MA`, color = "#D55E00") +
+  labs(y = "% of GDP",
+       title = "Total Australian exports: 7-MA") +
+  guides(colour = guide_legend(title = "series")) 
+```
+
+## Moving average smoothing
+
+```{r, echo=FALSE, cache=TRUE, warning=FALSE,message=FALSE}
+aus_exports <- global_economy |>
+  filter(Country == "Australia") |>
+  transmute(Exports, `9-MA` = slider::slide_dbl(Exports, mean,.before = 4, .after = 4, .complete = TRUE))
+
+aus_exports |> 
+  autoplot(Exports) +
+  autolayer(aus_exports,`9-MA`, color = "#D55E00") +
+  labs(y = "% of GDP",
+       title = "Total Australian exports: 9-MA") +
+  guides(colour = guide_legend(title = "series")) 
+
+```
+
+## Moving average smoothing
+
+```{r, echo=FALSE, cache=TRUE, warning=FALSE,message=FALSE}
+aus_exports <- global_economy |>
+  filter(Country == "Australia") |>
+  transmute(Exports, `11-MA` = slider::slide_dbl(Exports, mean,.before = 5, .after = 5, .complete = TRUE))
+
+aus_exports |> 
+  autoplot(Exports) +
+  autolayer(aus_exports,`11-MA`, color = "#D55E00") +
+  labs(y = "% of GDP",
+       title = "Total Australian exports: 11-MA") +
+  guides(colour = guide_legend(title = "series")) 
+```
+
+## Moving average smoothing
+
+```{r, echo=FALSE, cache=TRUE, warning=FALSE,message=FALSE}
+aus_exports <- global_economy |>
+  filter(Country == "Australia") |>
+  transmute(Exports, `13-MA` = slider::slide_dbl(Exports, mean,.before = 6, .after = 6, .complete = TRUE))
+
+aus_exports |> 
+  autoplot(Exports) +
+  autolayer(aus_exports,`13-MA`, color = "#D55E00") +
+  labs(y = "% of GDP",
+       title = "Total Australian exports: 13-MA") +
+  guides(colour = guide_legend(title = "series")) 
+```
+
+## Moving average smoothing
+
+\fontsize{10}{12}\sf
+
+```{r, echo=FALSE, cache=TRUE, warning=FALSE,message=FALSE}
+aus_exports <- global_economy |>
+  filter(Country == "Australia") |>
+  transmute(Exports, `15-MA` = 
+              slider::slide_dbl(Exports, mean,.before = 7, .after = 7, .complete = TRUE))
+
+aus_exports |> 
+  autoplot(Exports) +
+  autolayer(aus_exports,`15-MA`, color = "#D55E00") +
+  labs(y = "% of GDP",
+       title = "Total Australian exports: 15-MA") +
+  guides(colour = guide_legend(title = "series")) 
+```
+
+## Moving average smoothing
+\fontsize{12}{14}\sf
+
+So a moving average is an \orange{average of nearby points}
+
+  *  observations nearby in time are also likely to be \orange{close in value}.
+  *  average eliminates some \orange{randomness} in the data, leaving a smooth trend-cycle component.
+
+
+\begin{center}\begin{tabular}{ll}
+3-MA: & $\hat{T}_t = (y_{t-1} + y_{t} + y_{t+1})/3$\\[0.4cm]
+5-MA: & $\hat{T}_t = (y_{t-2} + y_{t-1} + y_{t} + y_{t+1} + y_{t+2})/5$
+\end{tabular}\end{center}
+
+  *  each average computed by dropping \orange{oldest} observation and including  \orange{next} observation.
+  *  averaging \orange{moves} through time series until trend-cycle computed at each observation possible.
+
+## Endpoints
+\fontsize{13}{15}\sf
+
+\alert{Why is there no estimate at ends?}
+
+  * For a 3 MA, there cannot be estimates at time 1 or time $T$ because the observations at time 0 and $T+1$ are not available.
+  * Generally: there cannot be estimates at times near the endpoints.
+
+\alert{The order of the MA}
+
+  * larger order means smoother, flatter curve
+  * larger order means more points lost at ends
+  * \orange{order = length of season} \textit{or cycle} removes pattern
+  * But so far odd orders?
+
+## Centered MA
+
+\fontsize{12}{13}\sf
+
+**4 MA:**
+$$ \frac14(y_{t-2}+y_{t-1}+y_t + y_{t+1})$$
+$$\mbox{or}\qquad\hspace*{1.4cm}
+\frac14(y_{t-1}+y_{t}+y_{t+1} + y_{t+2})$$
+
+\pause
+
+\vspace*{0.2cm}
+**\orange{Solution:}** take a further 2-MA to "centre" result.
+\vspace*{-0.2cm}
+
+\begin{align*}
+T_t &= \frac12\Big\{ \frac14(y_{t-2}+y_{t-1}+y_t + y_{t+1}) \\
+& \mbox{} \hspace*{1.95cm} +  \frac14(y_{t-1}+y_{t}+y_{t+1} + y_{t+2})\Big\}\\[0.1cm]
+ &=\frac18y_{t-2}+\frac14y_{t-1}+\frac14y_t + \frac14y_{t+1} +\frac18y_{t+2}
+\end{align*}
+
+## Centered MA
+\fontsize{12}{13}\sf
+\begin{tabular}{ccccc}
+\toprule
+Year&
+Data&
+4-MA&
+$2\times4$-MA&
+\\
+\midrule
+1992 Q1&
+443.00&
+\up{~}&
+&
+\\
+1992 Q2&
+410.00&
+\up{451.25}&
+&
+\\
+1992 Q3&
+420.00&
+\up{448.75}&
+450.00&
+\\
+1992 Q4&
+532.00&
+\up{451.50}&
+450.12&
+\\
+1993 Q1&
+433.00&
+\up{449.00}&
+450.25&
+\\
+1993 Q2&
+421.00&
+\up{444.00}&
+446.50&
+\\
+1993 Q3&
+410.00&
+\up{448.00}&
+446.00&
+\\
+1993 Q4&
+512.00&
+\up{438.00}&
+443.00&
+\\
+\vdots &
+\vdots &
+{\vdots}&
+\vdots&
+\\
+\end{tabular}\vspace*{10cm}
+
+## Moving average trend-cycle
+
+A moving average of the same length as the season removes the seasonal
+pattern.
+
+* For quarterly data: use a $2\times4$ MA
+
+* For monthly data: use a $2\times 12$ MA
+$$\hat{T}_t = \frac{1}{24}y_{t-6} + \frac1{12}y_{t-5} + \cdots +
+\frac{1}{12}y_{t+5} + \frac1{24}y_{t+6}$$
+
+## Moving average trend-cycle
+\fontsize{9}{11}\sf
+
+```{r eval=FALSE, include=TRUE}
+us_retail_employment_ma <- us_retail_employment |>
+  mutate(
+    `12-MA` = slider::slide_dbl(Employed, mean,
+          .before = 5, .after = 6, .complete = TRUE),
+    `2x12-MA` = slider::slide_dbl(`12-MA`, mean,
+          .before = 1, .after = 0, .complete = TRUE)
+  )
+
+us_retail_employment_ma |> 
+  autoplot(Employed, color = "gray") +
+  autolayer(us_retail_employment_ma, vars(`2x12-MA`),
+            color = "#D55E00") +
+  labs(y = "Persons (thousands)",
+       title = "Total employment in US retail")
+```
+
+## Moving average trend-cycle
+
+```{r elecequip2, echo=FALSE, cache=TRUE, warning=FALSE}
+
+us_retail_employment_ma <- us_retail_employment |>
+  mutate(
+    `12-MA` = slider::slide_dbl(Employed, mean,
+          .before = 5, .after = 6, .complete = TRUE),
+    `2x12-MA` = slider::slide_dbl(`12-MA`, mean,
+          .before = 1, .after = 0, .complete = TRUE)
+  )
+autoplot(us_retail_employment_ma, Employed, color = "gray") +
+  autolayer(us_retail_employment_ma, vars(`2x12-MA`),
+            color = "#D55E00") +
+  labs(y = "Persons (thousands)",
+       title = "Total employment in US retail")
+```

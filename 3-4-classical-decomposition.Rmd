@@ -1,0 +1,114 @@
+---
+title: "3. Time series decomposition"
+author: "3.4 Classical decomposition "
+date: "OTexts.org/fpp3/"
+classoption: aspectratio=169
+titlepage: fpp3title.png
+titlecolor: fpp3red
+toc: false
+output:
+  binb::monash:
+    colortheme: monashwhite
+    fig_width: 7.5
+    fig_height: 3
+    keep_tex: no
+    includes:
+      in_header: fpp3header.tex
+---
+
+```{r setup, include=FALSE}
+source("setup.R")
+
+us_retail_employment <- us_employment |>
+  filter(year(Month) >= 1990, Title == "Retail Trade") |>
+  select(-Series_ID)
+```
+
+## Trend-cycle
+\fontsize{12}{14}\sf
+\begin{block}{}
+Additive decomposition: $y_t = T_t+S_t+R_t = \hat{T}_t + \hat{S}_t + \hat{R}_t$\\
+Multiplicative decomposition: $y_t = T_t\times S_t\times R_t = \hat{T}_t\times \hat{S}_t\times\hat{R}_t$\end{block}
+\pause
+
+
+ * Estimate $\hat{T}$ using $(2\times m)$-MA if $m$ is even. Otherwise, estimate $\hat{T}$ using $m$-MA
+
+Compute de-trended series
+
+  * Additive decomposition: $y_t-\hat{T}_t$
+  * Multiplicative decomposition: $y_t/\hat{T}_t$
+
+
+
+**De-trending**
+
+Remove smoothed series $\hat{T}_t$ from $y_t$ to leave $S_t$ and $R_t$.
+
+  * Additive model: $y_t-\hat{T}_t  = (\hat{T}_t+\hat{S}_t+\hat{R}_t) - \hat{T}_t = \hat{S}_t+\hat{R}_t$
+  * Multiplicative model: $\frac{y_t}{\hat{T}_t} = \frac{\hat{T}_t\times \hat{S}_t\times \hat{R}_t}{\hat{T}_t} = \hat{S}_t\times \hat{R}_t$
+
+## Estimating seasonal component
+
+  *  Seasonal index for each season is estimated as an \orange{average} of the detrended series for that season of successive  years.
+  * E.g., take averages across all Januaries to get $S^{(1)}$ if your data is monthly. 
+  * If necessary, adjust the seasonal indices so that:
+    * for additive: $S^{(1)}+S^{(2)}+\ldots+S^{(12)}=0$ 
+    * for multiplicative: $S^{(1)}+S^{(2)}+\ldots+S^{(12)}=m$
+  * The seasonal component $\hat{S}_t$ simply consists of replications of the seasonal indices.
+
+
+## Remainder component
+
+Additive decomposition: $\hat{R}_t = y_t - \hat{T}_t - \hat{S}_t$
+
+Multiplicative decomposition: $\hat{R}_t = y_t / (\hat{T}_t\hat{S}_t)$
+\vspace{.5cm}
+\pause
+
+### Classical decomposition
+
+  *  Choose additive or multiplicative depending on which gives the most stable components.
+  *  For multiplicative model, this method of estimation is known as \orange{ratio-to-moving-average method}.
+
+## US Retail Employment 
+
+```{r echo=FALSE, warning=FALSE, fig.height=6, fig.width=12.5}
+us_retail_employment |>
+   model(classical_decomposition(Employed, type = "additive")) |>
+   components() |>
+   autoplot() + xlab("Year") +
+   ggtitle("Classical additive decomposition of total US retail employment")
+```
+
+## US Retail Employment 
+
+```{r echo=FALSE, warning=FALSE, fig.height=6, fig.width=12.5}
+us_retail_employment |>
+  model(classical_decomposition(Employed, type = "multiplicative")) |>
+  components() |>
+  autoplot() + xlab("Year") +
+  ggtitle("Classical multiplicative decomposition of total US retail employment")
+```
+
+## US Retail Employment 
+\fontsize{10}{12}\sf
+```{r echo=TRUE, warning=FALSE, eval=FALSE}
+us_retail_employment |>
+  model(classical_decomposition(Employed, type = "additive")) |>
+  components() |>
+  autoplot() + xlab("Year") +
+  ggtitle("Classical additive decomposition of total 
+          US retail employment")
+```
+
+
+## Comments on classical decomposition
+
+  *  Estimate of trend is \orange{unavailable} for first few and last few observations.
+  *  \orange{Seasonal component repeats} from year to year. May not be realistic.
+  *  \orange{Not robust to outliers}.
+  *  Newer methods designed to overcome these problems.
+
+
+

@@ -136,3 +136,15 @@ fit |>
   filter(Country == "Sweden") |>
   autoplot(gdppc) + labs(title = "GDP per capita for Sweden", y = "$US")
 ```
+
+## Recap
+
+The process of producing forecasts can be split up into a few fundamental steps.
+
+1. Preparing data - generate a `tsibble`
+2. Data visualisation
+3. Specifying a model
+4. Model estimation - `model() ->  mable`
+5. Accuracy \& performance evaluation
+6. Producing forecasts - `forecast() -> fable`
+
