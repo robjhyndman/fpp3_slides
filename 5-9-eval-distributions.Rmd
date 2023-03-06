@@ -1,0 +1,192 @@
+---
+title: "5. The forecaster's toolbox"
+author: "5.9 Evaluating distributional accuracy"
+date: "OTexts.org/fpp3/"
+classoption: aspectratio=169
+titlepage: fpp3title.png
+titlecolor: fpp3red
+toc: false
+output:
+  binb::monash:
+    colortheme: monashwhite
+    fig_width: 7.5
+    fig_height: 3
+    keep_tex: yes
+    includes:
+      in_header: fpp3header.tex
+---
+
+```{r setup, include=FALSE}
+source("setup.R")
+library(gganimate)
+```
+
+## Google closing stock prices
+
+```{r}
+google_stock <- gafa_stock |>
+  filter(Symbol == "GOOG", year(Date) >= 2015) |> 
+  mutate(day = row_number()) |>
+  update_tsibble(index = day, regular = TRUE)
+google_2015 <- google_stock |> 
+  filter(Symbol == "GOOG", year(Date) == 2015)
+google_jan_2016 <- google_stock |>
+  filter(Symbol == "GOOG", yearmonth(Date) == yearmonth("2016 Jan"))
+google_fit <- google_2015 |>
+  model(
+    Mean = MEAN(Close),
+    `Naïve` = NAIVE(Close),
+    Drift = RW(Close ~ drift())
+  )
+google_fc <- google_fit |>
+  forecast(google_jan_2016)
+```
+
+## Google closing stock prices
+
+```{r, fig.height=2.8}
+google_fc |>
+  filter(.model == "Mean") |>
+  autoplot(bind_rows(google_2015, google_jan_2016)) +
+  labs(y = "$US", title = "Google closing stock prices: Mean forecasts") +
+  guides(colour = guide_legend(title = "Forecast")) + ylim(490,880)
+```
+
+
+## Google closing stock prices
+
+```{r, fig.height=2.8}
+google_fc |>
+  filter(.model == "Naïve") |>
+  autoplot(bind_rows(google_2015, google_jan_2016)) +
+  labs(y = "$US", title = "Google closing stock prices: Naïve forecasts") +
+  guides(colour = guide_legend(title = "Forecast")) + ylim(490,880)
+```
+
+
+## Google closing stock prices
+
+```{r, fig.height=2.8}
+google_fc |>
+  filter(.model == "Drift") |>
+  autoplot(bind_rows(google_2015, google_jan_2016)) +
+  labs(y = "$US", title = "Google closing stock prices: Drift forecasts") +
+  guides(colour = guide_legend(title = "Forecast")) + ylim(490,880)
+```
+
+## Evaluating quantile forecasts
+
+\begin{textblock}{9.5}(0.2,1.2)
+\begin{alertblock}{}\vspace*{-0.2cm}
+\begin{align*}
+f_{p,t} &= \text{quantile forecast with prob. $p$ at time $t$.}\\
+y_{t} &= \text{observation at time $t$}\\
+& \text{Expect probability}(y_t < f_{p,t}) = p
+\end{align*}
+\end{alertblock}\vspace*{-0.3cm}
+\uncover<2->{\begin{block}{Quantile score}\vspace*{-0.2cm}
+$$
+  Q_{p,t} = \begin{cases}
+  2(1 - p) \big|y_t - f_{p,t}\big|, & \text{if $y_{t} < f_{p,t}$}\\
+  2p \big|y_{t} - f_{p,t}\big|, & \text{if $y_{t} \ge f_{p,t}$} \end{cases}
+$$
+\end{block}}
+\end{textblock}
+\begin{textblock}{15}(0.2,6.4)
+\uncover<4->{
+\begin{itemize}\itemsep=0cm\parskip=0cm
+\item Low $Q_{p,t}$ is good
+\item Multiplier of 2 often omitted, but useful for interpretation
+\item $Q_{p,t}$ like absolute error (weighted to account for likely exceedance)
+\end{itemize}}
+\end{textblock}
+\begin{textblock}{6}(10,2)
+\only<3->{\animategraphics[loop,autoplay]{10}{5-9-eval-distributions_files/figure-beamer/pinball-}{1}{100}}
+\end{textblock}
+
+```{r pinball, eval=FALSE, echo=FALSE, fig.show='animate', interval=1/10, message=FALSE, fig.height=3, fig.width=5, cache=FALSE}
+# Turn eval=TRUE to recompute these graphs. They are loaded in the above animategraphics call.
+prob <- seq(0.05, 0.95, by = 0.05)
+df <- expand.grid(
+  error = c(-10, 0, 10),
+  p = c(prob, rev(head(prob, -1)[-1]))
+) %>%
+  mutate(
+    state = rep(seq(length(p) / 3), rep(3, length(p) / 3)),
+    qpt = 2 * p * error * (error > 0) - 2 * (1 - p) * error * (error < 0)
+  )
+labels <- df %>%
+  select(p, state) %>%
+  distinct() %>%
+  mutate(label = paste0("p = ", sprintf("%.2f", p)))
+df %>% ggplot(aes(x = error, y = qpt)) +
+  geom_line(aes(group = state), colour = "red") +
+  labs(
+    x = latex2exp::TeX("Error: $y_t - f_{p,t}$"),
+    y = latex2exp::TeX("Q_{p,t}")
+  ) +
+  geom_label(data = labels, aes(x = 0, y = 17, label = label)) +
+  transition_states(state)
+```
+
+## Quantile scores
+\fontsize{10}{10}\sf
+
+```{r googlepcscore}
+google_fc |>
+  filter(.model == "Naïve", Date == "2016-01-04") |>
+  accuracy(google_stock, list(qs=quantile_score), probs=0.1)
+google_fc |>
+  filter(.model == "Naïve", Date == "2016-01-04") |>
+  accuracy(google_stock, list(qs=quantile_score), probs=0.9)
+```
+
+## Winkler Score
+
+For $100(1-\alpha)$% prediction interval: $[\ell_{\alpha,t}, u_{\alpha,t}]$.\vspace*{-0.1cm}
+$$
+ W_{\alpha,t} = \frac{Q_{\alpha/2,t} + Q_{1-\alpha/2,t}}{\alpha}
+   = \begin{cases}
+  (u_{\alpha,t} - \ell_{\alpha,t}) + \frac{2}{\alpha} (\ell_{\alpha,t} - y_t) & \text{if } y_t < \ell_{\alpha,t} \\
+  (u_{\alpha,t} - \ell_{\alpha,t})   & \text{if }  \ell_{\alpha,t} \le y_t \le u_{\alpha,t} \\
+  (u_{\alpha,t} - \ell_{\alpha,t}) + \frac{2}{\alpha} (y_t - u_{\alpha,t}) & \text{if } y_t > u_{\alpha,t}.
+  \end{cases}
+$$
+
+\fontsize{10}{10}\sf
+
+```{r googlewinklerscore, dependson='GSPfc'}
+google_fc |>
+  filter(.model == "Naïve", Date == "2016-01-04") |>
+  accuracy(google_stock, list(winkler = winkler_score), level = 80)
+```
+
+## Continuous Ranked Probability Score {-}
+
+Average quantile scores over all values of $p$ to obtain the
+
+**Continuous Ranked Probability Score** or CRPS.
+
+\fontsize{10}{10}\sf
+
+```{r crps, dependson='GSPfc'}
+google_fc |>
+  accuracy(google_stock, list(crps = CRPS))
+```
+
+
+## Scale-free comparisons using skill scores {-}
+
+Skill scores provide a forecast accuracy measure relative to some benchmark method (often the naïve method).\vspace*{0.1cm}
+$$
+\text{CRPS\_SS}_{\text{Method}} = 
+  \frac{\text{CRPS}_{\text{Naïve}} - \text{CRPS}_{\text{Method}}}{\text{CRPS}_{\text{Naïve}}}.
+$$
+
+\fontsize{10}{10}\sf
+
+```{r skillscore, dependson='GSPfc'}
+google_fc |>
+  accuracy(google_stock, list(skill = skill_score(CRPS)))
+```
+
