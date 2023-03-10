@@ -20,6 +20,34 @@ output:
 source("setup.R")
 ```
 
+
+## Mathematical transformations
+\fontsize{13}{15}\sf
+
+If the data show different variation at different levels of the series, then a transformation can be useful.
+
+Denote original observations as $y_1,\dots,y_n$ and transformed
+observations as $w_1, \dots, w_n$.
+
+\begin{block}{Box-Cox transformations}
+$$w_t = \left\{\begin{array}{ll}
+        \log(y_t),      & \quad \lambda = 0; \\
+        (\text{sign}(y_t)|y_t|^\lambda-1)/\lambda, & \quad \lambda \ne 0.
+\end{array}\right.$$
+\end{block}
+
+* Natural logarithm, particularly useful because they are more interpretable: changes in a log value are \orange{relative (percent) changes on the original scale}.
+
+## Back-transformation
+
+We must \orange{reverse the transformation} or \orange{back-transform} to obtain forecasts on the original scale. The reverse Box-Cox transformations are given by
+\begin{block}{Box-Cox back-transformations}
+$$ y_t = \left\{\begin{array}{ll}
+        \exp(w_t),      & \quad \lambda = 0; \\
+        \text{sign}(\lambda w_t+1)|\lambda w_t+1|^{1/\lambda},   & \quad \lambda \ne 0.\end{array}\right.$$
+\end{block}
+
+
 ## Modelling with transformations
 
 ```{r food, echo=TRUE, fig.height=2.65}
@@ -74,10 +102,10 @@ Let $X$ be have mean $\mu$ and variance $\sigma^2$.
 Let $f(x)$ be back-transformation function, and $Y=f(X)$.
 
 Taylor series expansion about $\mu$:
-$$f(X) = f(\mu) + (X-\mu)f'(\mu) + \frac{1}{2}(X-\mu)^2f''(\mu).$$\pause\vspace*{-0.4cm}
+$$Y = f(X) \approx f(\mu) + (X-\mu)f'(\mu) + \frac{1}{2}(X-\mu)^2f''(\mu).$$\pause\vspace*{-0.4cm}
 
 \begin{alertblock}{}
-\centerline{$\E[Y] = \E[f(X)] = f(\mu) + \frac12 \sigma^2 f''(\mu)$}
+\centerline{$\E[Y] = \E[f(X)] \approx f(\mu) + \frac12 \sigma^2 f''(\mu)$}
 \end{alertblock}
 
 ## Bias adjustment
@@ -100,7 +128,7 @@ f''(x) &= \begin{cases}
  \end{cases}
 \end{align*}\pause
 \begin{alertblock}{}
-\centerline{$\E[Y] = \begin{cases}
+\centerline{$\E[Y] \approx \begin{cases}
                         e^\mu\left[1+\frac{\sigma^2}{2}\right] & \quad\lambda=0;\\
  (\lambda \mu + 1)^{1/\lambda}\left[1+\frac{\sigma^2(1-\lambda)}{2(\lambda\mu+1)^2}\right] & \quad\lambda\ne0.
  \end{cases}$}
