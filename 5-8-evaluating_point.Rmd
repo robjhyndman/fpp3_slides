@@ -35,6 +35,8 @@ text(10, 1, "Training data", col = "#0072B2")
 text(21, 1, "Test data", col = "#D55E00")
 ```
 
+\fontsize{13}{14}\sf
+
 -   A model which fits the training data well will not necessarily forecast well.
 -   A perfect fit can always be obtained by using a model with enough parameters.
 -   Over-fitting a model to data is just as bad as failing to identify a systematic pattern in the data.
@@ -95,41 +97,47 @@ $e_{T+h} =$  & $y_{T+h} - \pred{y}{T+h}{T}$
   * MAE, MSE, RMSE are all scale dependent.
   * MAPE is scale independent but is only sensible if $y_t\gg 0$ for all $t$, and $y$ has a natural zero.
 
-## Measures of forecast accuracy
+
+## Scaled Errors
+
+\fontsize{13}{14}\sf
+
+Proposed by Hyndman and Koehler (IJF, 2006).
+
+- For non-seasonal time series, scale errors using naïve forecasts:
+$$
+  q_{j} = \frac{\displaystyle e_{j}}
+    {\displaystyle\frac{1}{T-1}\sum_{t=2}^T |y_{t}-y_{t-1}|}.
+$$ \pause
+- For seasonal time series, scale forecast errors using seasonal naïve forecasts:
+$$
+  q_{j} = \frac{\displaystyle e_{j}}
+    {\displaystyle\frac{1}{T-m}\sum_{t=m+1}^T |y_{t}-y_{t-m}|}.
+$$
+
+## Scaled errors 
+
+\fontsize{13}{14}\sf
+
 
 \begin{block}{Mean Absolute Scaled Error}
 $$
-\text{MASE} = \text{mean}(|e_{T+h}|/Q)
+  \text{MASE} = \text{mean}(|q_{j}|)
 $$
-where $Q$ is a stable measure of the scale of the time series $\{y_t\}$.
+\end{block} \pause
+
+\begin{block}{Root Mean Squared Scaled Error}
+$$
+  \text{RMSSE} = \sqrt{\text{mean}(q_{j}^2)}
+$$
 \end{block}
-Proposed by Hyndman and Koehler (IJF, 2006).
 
-For non-seasonal time series,
+where
 $$
-  Q = (T-1)^{-1}\sum_{t=2}^T |y_t-y_{t-1}|
+  q^2_{j} = \frac{\displaystyle e^2_{j}}
+    {\displaystyle\frac{1}{T-m}\sum_{t=m+1}^T (y_{t}-y_{t-m})^2},
 $$
-works well. Then MASE is equivalent to MAE relative to a naïve method.
-
-\vspace*{10cm}
-
-## Measures of forecast accuracy
-
-\begin{block}{Mean Absolute Scaled Error}
-$$
-\text{MASE} = \text{mean}(|e_{T+h}|/Q)
-$$
-where $Q$ is a stable measure of the scale of the time series $\{y_t\}$.
-\end{block}
-Proposed by Hyndman and Koehler (IJF, 2006).
-
-For seasonal time series,
-$$
-  Q = (T-m)^{-1}\sum_{t=m+1}^T |y_t-y_{t-m}|
-$$
-works well. Then MASE is equivalent to MAE relative to a seasonal naïve method.
-
-\vspace*{10cm}
+and we set $m=1$ for non-seasonal data.
 
 ## Measures of forecast accuracy
 
@@ -185,3 +193,4 @@ accuracy(beer_fc, recent_production) |>
 ```
 
 \vspace*{10cm}
+

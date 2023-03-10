@@ -97,7 +97,7 @@ fc |> autoplot(eggs) +
 
 **Back-transformed means**
 
-Let $X$ be have mean $\mu$ and variance $\sigma^2$.
+Let $X$ have mean $\mu$ and variance $\sigma^2$.
 
 Let $f(x)$ be back-transformation function, and $Y=f(X)$.
 
