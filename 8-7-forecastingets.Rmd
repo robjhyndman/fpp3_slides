@@ -126,7 +126,7 @@ h02 |>
 ## Example: Corticosteroid drug sales
 \fontsize{10}{12}\sf
 
-```{r, echo=TRUE, results = "hide"}
+```{r, echo=TRUE}
 h02 |>
   model(
     auto = ETS(Cost),
@@ -135,7 +135,7 @@ h02 |>
   accuracy()
 ```
 
-```{r, echo=FALSE, eval=TRUE}
+```{r, echo=FALSE, eval=FALSE}
 h02 |>
   model(
     auto = ETS(Cost),
