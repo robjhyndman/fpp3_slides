@@ -166,31 +166,23 @@ beer_fc <- beer_fit |>
 ```
 
 ## Measures of forecast accuracy
-\fontsize{9}{9}\sf
 
-```{r beer-train-accuracy, eval=FALSE}
-accuracy(beer_fit)
-```
+\fontsize{12}{14}\sf
 
-\vspace*{-0.3cm}
-
-```{r beer-train-table, echo=FALSE}
+```{r beer-train-table}
 accuracy(beer_fit) |>
   arrange(.model) |>
-  select(.model, .type, RMSE, MAE, MAPE, MASE)
+  select(.model, .type, RMSE, MAE, MAPE, MASE, RMSSE)
 ```
 
-```{r beer-test-accuracy, eval=FALSE}
-accuracy(beer_fc, recent_production)
-```
+## Measures of forecast accuracy
 
-\vspace*{-0.3cm}
+\fontsize{12}{14}\sf
 
-```{r beer-test-table, echo=FALSE}
+```{r beer-test-table}
 accuracy(beer_fc, recent_production) |>
   arrange(.model) |>
-  select(.model, .type, RMSE, MAE, MAPE, MASE)
+  select(.model, .type, RMSE, MAE, MAPE, MASE, RMSSE)
 ```
 
-\vspace*{10cm}
 
