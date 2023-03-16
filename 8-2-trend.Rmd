@@ -167,7 +167,7 @@ accuracy(fit)
 ```{r echo=FALSE}
 fit_terms <- tidy(fit) |>
   spread(.model, estimate) |>
-  mutate(term = factor(term, levels = c("alpha", "beta", "phi", "l", "b"), labels = c("$\\alpha$", "$\\beta^*$", "$\\phi$", "$\\ell_0$", "$b_0$"))) |>
+  mutate(term = factor(term, levels = c("alpha", "beta", "phi", "l[0]", "b[0]"), labels = c("$\\alpha$", "$\\beta^*$", "$\\phi$", "$\\ell_0$", "$b_0$"))) |>
   arrange(term)
 
 fit_accuracy <- accuracy(fit) |>
