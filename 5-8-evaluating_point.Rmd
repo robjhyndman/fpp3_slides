@@ -106,12 +106,12 @@ Proposed by Hyndman and Koehler (IJF, 2006).
 
 - For non-seasonal time series, scale errors using naïve forecasts:
 $$
-  q_{j} = \frac{\displaystyle e_{j}}
+  q_{T+h} = \frac{\displaystyle e_{T+h}}
     {\displaystyle\frac{1}{T-1}\sum_{t=2}^T |y_{t}-y_{t-1}|}.
 $$ \pause
 - For seasonal time series, scale forecast errors using seasonal naïve forecasts:
 $$
-  q_{j} = \frac{\displaystyle e_{j}}
+  q_{T+h} = \frac{\displaystyle e_{T+h}}
     {\displaystyle\frac{1}{T-m}\sum_{t=m+1}^T |y_{t}-y_{t-m}|}.
 $$
 
@@ -122,19 +122,19 @@ $$
 
 \begin{block}{Mean Absolute Scaled Error}
 $$
-  \text{MASE} = \text{mean}(|q_{j}|)
+  \text{MASE} = \text{mean}(|q_{T+h}|)
 $$
 \end{block} \pause
 
 \begin{block}{Root Mean Squared Scaled Error}
 $$
-  \text{RMSSE} = \sqrt{\text{mean}(q_{j}^2)}
+  \text{RMSSE} = \sqrt{\text{mean}(q_{T+h}^2)}
 $$
 \end{block}
 
 where
 $$
-  q^2_{j} = \frac{\displaystyle e^2_{j}}
+  q^2_{T+h} = \frac{\displaystyle e^2_{T+h}}
     {\displaystyle\frac{1}{T-m}\sum_{t=m+1}^T (y_{t}-y_{t-m})^2},
 $$
 and we set $m=1$ for non-seasonal data.
