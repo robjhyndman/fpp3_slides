@@ -63,7 +63,7 @@ $y_{T-5}$ & $(0.2)(0.8)^5$ & $(0.4)(0.6)^5$ & $(0.6)(0.4)^5$ & $(0.8)(0.2)^5$\\
 
 ## Simple Exponential Smoothing
 
-```{r alpha-anim, cache=TRUE, echo=FALSE, fig.show='animate', interval=1/5, message=FALSE, fig.height=5, fig.width=8, aniopts='controls,buttonsize=0.3cm,width=11.5cm'}
+```{r alpha-anim, cache=TRUE, echo=FALSE, fig.show='animate', interval=1/5, message=FALSE, fig.height=4.9, fig.width=8, aniopts='controls,buttonsize=0.3cm,width=11.5cm'}
 algeria_economy <- global_economy |>
   filter(Country == "Algeria")
 alpha_anim <- purrr::map_dfr(
@@ -99,7 +99,9 @@ alpha_anim |>
 
 ## Simple Exponential Smoothing
 
-\begin{block}{Component form}\vspace*{-0.4cm}
+\fontsize{13}{13}\sf
+
+\begin{block}{Component form}\vspace*{-0.6cm}
 \begin{align*}
 \text{Forecast equation}&&\pred{y}{t+h}{t} &= \ell_{t}\\
 \text{Smoothing equation}&&\ell_{t} &= \alpha y_{t} + (1 - \alpha)\ell_{t-1}
@@ -108,6 +110,7 @@ alpha_anim |>
 
 * $\ell_t$ is the level (or the smoothed value) of the series at time t.
 * $\pred{y}{t+1}{t} = \alpha y_t + (1-\alpha) \pred{y}{t}{t-1}$
+* $\pred{y}{T+h}{T} = \ell_{T}$,  $h=2,3,...$
 
 \pause
 
@@ -194,7 +197,9 @@ components(fit) |>
 
 ## Example: Algerian Exports
 
-```{r ses-fc, echo=TRUE, cache=TRUE}
+\vspace{-0.1cm}
+
+```{r ses-fc, echo=TRUE, cache=TRUE, fig.height=3, fig.width=8}
 fit |>
   forecast(h = 5) |>
   autoplot(algeria_economy) +

@@ -52,7 +52,7 @@ s_{t} &= \gamma (y_{t}-\ell_{t-1}-b_{t-1}) + (1-\gamma)s_{t-m}
 
 ## Exponential smoothing: seasonality
 
-```{r gamma-anim, cache=TRUE, echo=FALSE, fig.show='animate', interval=1/5, message=FALSE, fig.height=5, fig.width=8, aniopts='controls,buttonsize=0.3cm,width=11.5cm'}
+```{r gamma-anim, cache=TRUE, echo=FALSE, fig.show='animate', interval=1/5, message=FALSE, fig.height=4.8, fig.width=8, aniopts='controls,buttonsize=0.3cm,width=11.5cm'}
 j07 <- PBS |>
   filter(ATC2 == "J07") |>
   summarise(Cost = sum(Cost))
@@ -75,6 +75,27 @@ gamma_anim |>
     y = "$AUD",
     title = "Medicare Australia cost of vaccine scripts: seasonality (gamma = {format(as.numeric(as.character(current_frame)), nsmall=2)})"
   )
+```
+
+## Exponential smoothing: seasonality
+
+```{r gamma-static, fig.height=3.8, fig.width=8, echo=FALSE}
+gamma_static <- map_dfr(list(0, NULL, 1), function(gamma){
+  fit <- j07 %>%
+    model(ETS(Cost ~ error("A") + trend("N", alpha = 0.001, alpha_range = c(-1,1),
+              beta_range = c(-1,1)) + season("A", gamma = gamma, gamma_range = c(-1,1)), bounds = "admissible"))
+  fit %>%
+    augment() %>%
+    mutate(gamma = tidy(fit)$estimate[tidy(fit)$term == "gamma"]) %>%
+    as_tibble()
+}) %>%
+  mutate(gamma = factor(format(gamma)))
+j07 %>%
+  ggplot(aes(x = Month, y = Cost)) +
+  geom_line() +
+  geom_line(aes(y = .fitted, colour = gamma), data = gamma_static) +
+  labs(y = "Cost of scripts ($AUD)",
+       title = "Medicare Australia cost of flu vaccine scripts: seasonality")
 ```
 
 ## Holt-Winters multiplicative method

@@ -129,9 +129,9 @@ Method performed very well in M3 competition.
 
 ## Some unstable models
 
-* Some of the combinations of (Error, Trend, Seasonal) can lead to numerical difficulties; see equations with division by a state.
+* Some of the combinations of (Error, Trend, Seasonal) can lead to numerical difficulties; see equations with \orange{division by a state}.
 * These are: ETS(A,N,M), ETS(A,A,M), ETS(A,A\damped,M).
-* Models with multiplicative errors are useful for strictly positive data, but are not numerically stable with data containing zeros or negative values. In that case only the six fully additive models will be applied.
+* Models with \orange{multiplicative errors} are useful for \orange{strictly positive data}, but are not numerically stable with data containing zeros or negative values. In that case only the \orange{six fully additive models} will be applied.
 
 ## Example: National populations
 \fontsize{9}{9}\sf
