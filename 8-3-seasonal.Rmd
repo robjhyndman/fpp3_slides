@@ -130,20 +130,31 @@ fit <- aus_holidays |>
 fc <- fit |> forecast()
 ```
 
-## Example: Australian holiday tourism
+## Estimated coefficients
+\fontsize{10}{11}\sf
 
-```{r}
-fc |>
-  autoplot(aus_holidays, level = NULL) +
-  labs(y = "Thousands", title = "Overnight trips")
+```{r, echo = TRUE}
+tidy(fit) |> 
+   spread(.model, estimate)
+```
+
+
+## Estimated components
+\fontsize{10}{11}\sf
+
+```{r, echo = TRUE}
+components(fit) |> filter(.model=="additive") |> 
+   left_join(fitted(fit), by = c(".model", "Quarter"))
 ```
 
 ## Estimated components
 \fontsize{10}{11}\sf
 
 ```{r, echo = TRUE}
-components(fit)
+components(fit) |> filter(.model=="multiplicative") |> 
+   left_join(fitted(fit), by = c(".model", "Quarter"))
 ```
+
 
 ## Estimated components
 
@@ -163,6 +174,17 @@ components(fit) |>
   ) |>
   wrap_plots(ncol = 2)
 ```
+
+## Example: Australian holiday tourism
+
+```{r}
+fc |>
+  autoplot(aus_holidays, level = NULL) +
+  labs(y = "Thousands", title = "Overnight trips")
+```
+
+
+
 
 ## Holt-Winters damped method
 Often the single most accurate forecasting method for seasonal data:
