@@ -214,7 +214,7 @@ fit |>
   augment()
 ```
 
-\only<2>{\begin{textblock}{8}(7,2)\begin{alertblock}{}Innovation residuals (\texttt{.innov}) are given by $\hat{\varepsilon}_t$ while regular residuals (\texttt{.resid}) are $y_t - \hat{y}_{t-1}$. They are different when the model has multiplicative errors.
+\only<2>{\begin{textblock}{8}(7,2)\begin{alertblock}{}Innovation residuals (\texttt{.innov}) are given by $\hat{\varepsilon}_t$ while regular residuals (\texttt{.resid}) are $y_t - \hat{y}_{t/t-1}$. They are different when the model has multiplicative errors.
 \end{alertblock}\end{textblock}}
 
 ```{r normal, include=FALSE}
