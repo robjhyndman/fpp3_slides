@@ -151,60 +151,6 @@ fit |>
   forecast(h = 5)
 ```
 
-## Example: Australian holiday tourism
-\fontsize{9}{9}\sf
-
-```{r ausholidays-fit, echo=TRUE}
-holidays <- tourism |>
-  filter(Purpose == "Holiday")
-fit <- holidays |> model(ets = ETS(Trips))
-fit
-```
-
-## Example: Australian holiday tourism
-\fontsize{9}{9}\sf
-
-```{r ausholidays-report}
-fit |>
-  filter(Region == "Snowy Mountains") |>
-  report()
-```
-
-## Example: Australian holiday tourism
-\fontsize{9}{9}\sf
-
-```{r ausholidays-components}
-fit |>
-  filter(Region == "Snowy Mountains") |>
-  components(fit)
-```
-
-## Example: Australian holiday tourism
-
-```{r ausholidays-components-plot}
-fit |>
-  filter(Region == "Snowy Mountains") |>
-  components(fit) |>
-  autoplot()
-```
-
-## Example: Australian holiday tourism
-\fontsize{9}{9}\sf
-
-```{r ausholidays-forecast}
-fit |> forecast()
-```
-
-## Example: Australian holiday tourism
-
-```{r ausholidays-forecast-plot, fig.height=2.6}
-fit |>
-  forecast() |>
-  filter(Region == "Snowy Mountains") |>
-  autoplot(holidays) +
-  labs(y = "Thousands", title = "Overnight trips")
-```
-
 ## Residuals
 
 ### Response residuals
@@ -228,6 +174,14 @@ fit <- aus_holidays |>
   model(ets = ETS(Trips)) |>
   report()
 ```
+
+## Example: Australian holiday tourism
+\fontsize{8}{7.5}\sf
+
+```{r, echo = TRUE, fig.height=4}
+components(fit) |> autoplot() + labs(title = "ETS(M,N,A) components")
+```
+
 
 ## Example: Australian holiday tourism
 \fontsize{10}{10}\sf
