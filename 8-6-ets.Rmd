@@ -43,7 +43,7 @@ g(\bm{x}_{t-1})\varepsilon_t$\\
 
 Additive errors
 : \mbox{}\vspace*{-0.cm}\newline
-  $k(x)=1$.\qquad $y_t = \mu_{t} + \varepsilon_t$.
+  $k(\bm{x}_{t-1})=1$.\qquad $y_t = \mu_{t} + \varepsilon_t$.
 
 Multiplicative errors
 : \mbox{}\vspace*{-0.cm}\newline
@@ -154,14 +154,14 @@ fit |>
 ## Residuals
 
 ### Response residuals
-$$\hat{e}_t = y_t - \hat{y}_{t|t-1}$$
+$$e_t = y_t - \hat{y}_{t|t-1}$$
 
 ### Innovation residuals
 Additive error model:
-$$\hat\varepsilon_t = y_t - \hat{y}_{t|t-1}$$
+$$\hat\varepsilon_t = y_t - \hat{y}_{t|t-1} = e_t$$
 
 Multiplicative error model:
-$$\hat\varepsilon_t = \frac{y_t - \hat{y}_{t|t-1}}{\hat{y}_{t|t-1}}$$
+$$\hat\varepsilon_t = \frac{y_t - \hat{y}_{t|t-1}}{\hat{y}_{t|t-1}} \ne e_t$$
 
 ## Example: Australian holiday tourism
 \fontsize{8}{7.5}\sf
@@ -179,7 +179,7 @@ fit <- aus_holidays |>
 \fontsize{8}{7.5}\sf
 
 ```{r, echo = TRUE, fig.height=4}
-components(fit) |> autoplot() + labs(title = "ETS(M,N,A) components")
+components(fit) |> autoplot() + labs(title = "ETS(M,N,M) components")
 ```
 
 
