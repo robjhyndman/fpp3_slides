@@ -56,11 +56,11 @@ $$
 \begin{block}{}
 \centerline{$y_t = (1+\phi_1)y_{t-1} -(\phi_1-\phi_2)y_{t-2} - (\phi_2-\phi_3)y_{t-3} -\phi_3y_{t-4} + \varepsilon_t+\theta_1\varepsilon_{t-1}$}
 \end{block}\pause
-\alert{ARIMA(3,1,1) forecasts: Step 2}\vspace*{-0.4cm}
+\orange{ARIMA(3,1,1) forecasts: Step 2}\vspace*{-0.4cm}
 \begin{align*}
 y_{T+1} = (1+\phi_1)y_{T} -(\phi_1-\phi_2)y_{T-1} - (\phi_2-\phi_3)y_{T-2}-\phi_3y_{T-3} + \varepsilon_{T+1}+\theta_1\varepsilon_{T}
 \end{align*}\pause
-\alert{ARIMA(3,1,1) forecasts: Step 3}\vspace*{-0.4cm}
+\orange{ARIMA(3,1,1) forecasts: Step 3}\vspace*{-0.4cm}
 \begin{align*}
 \hat{y}_{T+1|T} = (1+\phi_1)y_{T} -(\phi_1-\phi_2)y_{T-1} - (\phi_2-\phi_3)y_{T-2}{} -\phi_3y_{T-3} + \theta_1 e_{T}
 \end{align*}
@@ -71,11 +71,11 @@ y_{T+1} = (1+\phi_1)y_{T} -(\phi_1-\phi_2)y_{T-1} - (\phi_2-\phi_3)y_{T-2}-\phi_
 \begin{block}{}
 \centerline{$y_t = (1+\phi_1)y_{t-1} -(\phi_1-\phi_2)y_{t-2} - (\phi_2-\phi_3)y_{t-3}-\phi_3y_{t-4} + \varepsilon_t+\theta_1\varepsilon_{t-1}$}
 \end{block}\pause
-\alert{ARIMA(3,1,1) forecasts: Step 2}\vspace*{-0.4cm}
+\orange{ARIMA(3,1,1) forecasts: Step 2}\vspace*{-0.4cm}
 \begin{align*}
 y_{T+2} = (1+\phi_1)y_{T+1} -(\phi_1-\phi_2)y_{T} - (\phi_2-\phi_3)y_{T-1} -\phi_3y_{T-2} + \varepsilon_{T+2}+\theta_1\varepsilon_{T+1}.
 \end{align*}\pause
-\alert{ARIMA(3,1,1) forecasts: Step 3}\vspace*{-0.4cm}
+\orange{ARIMA(3,1,1) forecasts: Step 3}\vspace*{-0.4cm}
 \begin{align*}
 \hat{y}_{T+2|T} = (1+\phi_1)\hat{y}_{T+1|T} -(\phi_1-\phi_2)y_{T} - (\phi_2-\phi_3)y_{T-1} -\phi_3y_{T-2}.
 \end{align*}
@@ -98,17 +98,17 @@ v_{T|T+h} = \hat{\sigma}^2 \left[ 1 + \sum_{i=1}^{h-1} \theta_i^2\right], \qquad
 
 \pause
 
-* Other models beyond scope of this subject.
+* Other models beyond scope of this book.
 
 \vspace*{10cm}
 
 
 ## Prediction intervals
 
-* Prediction intervals **increase in size with forecast horizon**.
+* Prediction intervals \orange{increase in size with forecast horizon}.
 * Prediction intervals can be difficult to calculate by hand
-* Calculations assume residuals are **uncorrelated** and **normally distributed**.
+* Calculations assume residuals are \orange{uncorrelated} and \orange{normally distributed}.
 * Prediction intervals tend to be too narrow.
-    * the uncertainty in the parameter estimates has not been accounted for.
-    * the ARIMA model assumes historical patterns will not change during the forecast period.
-    * the ARIMA model assumes uncorrelated future \rlap{errors}
+    * the \orange{uncertainty in the parameter estimates} has not been accounted for.
+    * the ARIMA model assumes \orange{historical patterns will not change} during the forecast period.
+    * the ARIMA model assumes \orange{uncorrelated future \rlap{errors.}}
