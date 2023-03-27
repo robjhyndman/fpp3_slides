@@ -18,98 +18,97 @@ output:
 
 ```{r setup, include=FALSE}
 source("setup.R")
+library(patchwork)
 ```
 
 ## Stationarity
 
 \begin{block}{Definition}
-If $\{y_t\}$ is a stationary time series, then for all $s$, the distribution of $(y_t,\dots,y_{t+s})$ does not depend on $t$.
+If $\{y_t\}$ is a \orange{stationary time series}, then for all $s$, the distribution of $(y_t,\dots,y_{t+s})$ does not depend on $t$.
 \end{block}\pause
 
-A **stationary series** is:
+A \orange{stationary series} is:
 
 * roughly horizontal
 * constant variance
 * no patterns predictable in the long-term
 
-## Stationary?
 
-```{r}
-gafa_stock |>
-  filter(Symbol == "GOOG", year(Date) == 2018) |>
+## Stationarity
+
+\begin{block}{Definition}
+If $\{y_t\}$ is a \orange{stationary time series}, then for all $s$, the distribution of $(y_t,\dots,y_{t+s})$ does not depend on $t$.
+\end{block}\pause
+
+A \orange{stationary series} is:
+
+* roughly horizontal
+* constant variance
+* no patterns predictable in the long-term
+
+## Stationary or not
+
+```{r stationary, echo=FALSE, warning=FALSE, fig.height=4.6, fig.width=10}
+p1 <- gafa_stock |>
+  filter(Symbol == "GOOG", year(Date) == 2015) |>
   autoplot(Close) +
-  labs(y = "Google closing stock price", x = "Day")
-```
+  labs(subtitle = "(a) Google closing price", x = "Day", y = " $US")
 
-## Stationary?
-
-```{r}
-gafa_stock |>
-  filter(Symbol == "GOOG", year(Date) == 2018) |>
+p2 <- gafa_stock |>
+  filter(Symbol == "GOOG", year(Date) == 2015) |>
   autoplot(difference(Close)) +
-  labs(y = "Google closing stock price", x = "Day")
-```
+  labs(subtitle = "(b) Change in google price", x = "Day", y = "$US")
 
-## Stationary?
+p3 <- as_tsibble(fma::strikes) |>
+  autoplot(value) +
+  labs(subtitle = "(c) Strikes: US",
+       y = "Number of strikes",
+       x = "Year")
 
-```{r}
-global_economy |>
-  filter(Country == "Algeria") |>
-  autoplot(Exports) +
-  labs(y = "% of GDP", title = "Algerian Exports")
-```
+p4 <- as_tsibble(fma::hsales) |>
+  autoplot(value) +
+  labs(subtitle = "(d) House sales: US",
+       y = "Number of houses",
+       x = "Month")
 
-## Stationary?
+p5 <- as_tsibble(fma::eggs) |>
+  autoplot(value) +
+  labs(subtitle = "(e) Egg prices: US",
+       y = "$US (constant prices)",
+       x = "Year")
 
-```{r}
-aus_production |>
-  autoplot(Bricks) +
-  labs(title = "Clay brick production in Australia")
-```
+p6 <- aus_livestock |>
+  filter(State == "Victoria", Animal == "Pigs") |>
+  autoplot(Count) +
+  labs(subtitle = "(f) Pigs slaughtered: Victoria, Australia",
+       y = "Number of pigs",
+       x="Month")
 
-## Stationary?
-
-```{r}
-prices |>
-  filter(year >= 1900) |>
-  autoplot(eggs) +
-  labs(y = "$US (1993)", title = "Price of a dozen eggs")
-```
-
-## Stationary?
-
-```{r}
-aus_livestock |>
-  filter(Animal == "Pigs", State == "Victoria") |>
-  autoplot(Count / 1e3) +
-  labs(y = "thousands", title = "Total pigs slaughtered in Victoria")
-```
-
-## Stationary?
-
-```{r}
-aus_livestock |>
-  filter(Animal == "Pigs", State == "Victoria", year(Month) >= 2010) |>
-  autoplot(Count / 1e3) +
-  labs(y = "thousands", title = "Total pigs slaughtered in Victoria")
-```
-
-## Stationary?
-
-```{r}
-aus_livestock |>
-  filter(Animal == "Pigs", State == "Victoria", year(Month) >= 2015) |>
-  autoplot(Count / 1e3) +
-  labs(y = "thousands", title = "Total pigs slaughtered in Victoria")
-```
-
-## Stationary?
-
-```{r}
-pelt |>
+p7 <- pelt |>
   autoplot(Lynx) +
-  labs(y = "Number trapped", title = "Annual Canadian Lynx Trappings")
+  labs(subtitle = "(g) Lynx trapped: Canada",
+       y = "Number of lynx",
+       x = "Year")
+
+p8 <- aus_production |>
+  filter(year(Quarter) %in% 1991:1995) |>
+  autoplot(Beer) +
+  labs(subtitle = "(h) Beer production: Australia",
+       y = "Megalitres",
+       x = "Quarter")
+
+p9 <- aus_production |>
+  autoplot(Gas) +
+  labs(subtitle = "(i) Gas production: Australia",
+       y = "Petajoules",
+       x = "Quarter")
+
+(p1 | p2 | p3) / (p4 | p5 | p6) / (p7 | p8 | p9)
 ```
+
+
+
+
 
 ## Stationarity
 
@@ -117,9 +116,8 @@ pelt |>
 If $\{y_t\}$ is a stationary time series, then for all $s$, the distribution of $(y_t,\dots,y_{t+s})$ does not depend on $t$.
 \end{block}\pause\vspace*{0.4cm}
 
-Transformations help to **stabilize the variance**.
-
-For ARIMA modelling, we also need to **stabilize the mean**.
+* Transformations help to \orange{stabilize the variance}.
+* For ARIMA modelling, we also need to \orange{stabilize the mean}.
 
 ## Non-stationarity in the mean
 \alert{Identifying non-stationary series}
@@ -170,9 +168,18 @@ google_2018 |>
 
 ## Differencing
 
-* Differencing helps to **stabilize the mean**.
-* The differenced series is the *change* between each observation in the original series: $y'_t = y_t - y_{t-1}$.
-* The differenced series will have only $T-1$ values since it is not possible to calculate a difference $y_1'$ for the first observation.
+* Differencing helps to \orange{stabilize the mean}.
+* The differenced series is the \orange{change} between each observation in the original series: $y'_t = y_t - y_{t-1}$.
+* The differenced series will have \orange{only $T-1$ values} since it is not possible to calculate a difference $y_1'$ for the first observation.
+
+## Example: Google stock price 
+
+* The differences are the \orange{day-to-day} changes.
+* Now the series looks just like a white noise series:
+    * No autocorrelations outside the 95% limits.
+    * Large Ljung-Box p-value.  
+* \orange{Conclusion:} The daily change in the Google stock price is essentially a random amount uncorrelated with previous days.
+
 
 ## Random walk model
 
@@ -184,11 +191,11 @@ If differenced series is white noise with zero mean:
 where $\varepsilon_t \sim NID(0,\sigma^2)$.
 
 * Very widely used for non-stationary data.
-* This is the model behind the \alert{naïve method}.
+* This is the model behind the \orange{naïve method}.
 * Random walks typically have:
     * long periods of apparent trends up or down
     * Sudden/unpredictable changes in direction
-* Forecast are equal to the last observation
+* Forecast are equal to the last observation (naïve)
     * future movements up or down are equally likely.
 
 ## Random walk with drift model
@@ -200,9 +207,9 @@ If differenced series is white noise with non-zero mean:
 \end{block}\vspace*{-0.3cm}
 where $\varepsilon_t \sim NID(0,\sigma^2)$.
 
-* $c$ is the \alert{average change} between consecutive observations.
+* $c$ is the \orange{average change} between consecutive observations.
 * If $c>0$, $y_t$ will tend to drift upwards and vice versa.
-* This is the model behind the \alert{drift method}.
+* This is the model behind the \orange{drift method}.
 
 \vspace*{10cm}
 
@@ -220,7 +227,9 @@ y''_{t} & = y'_{t} - y'_{t - 1} \\
 
 ## Seasonal differencing
 
-A seasonal difference is the difference between an observation and the corresponding observation from the previous year.\pause
+\fontsize{14}{14}\sf
+
+A \orange{seasonal difference} is the difference between an observation and the corresponding observation from the previous year.
 $$
  y'_t = y_t - y_{t-m}
 $$
@@ -228,6 +237,16 @@ where $m=$ number of seasons.\pause
 
 * For monthly data $m=12$.
 * For quarterly data $m=4$.
+* Seasonally differenced series will have \orange{$T-m$} obs.\pause
+  
+\vspace{0.4cm}
+
+If seasonally differenced data is white noise it implies: 
+\begin{block}{}
+\centerline{$y_t-y_{t-m}=\varepsilon_t$ \hspace{0.4cm} or \hspace{0.4cm} $y_t=y_{t-m}+\varepsilon_t$}
+\end{block}
+
+  * The model behind the \orange{seasonal naïve} method.
 
 ## Antidiabetic drug sales
 
@@ -327,36 +346,52 @@ It is important that if differencing is used, the differences are interpretable.
 
 ## Interpretation of differencing
 
-* first differences are the change between **one observation and the next**;
-* seasonal differences are the change between **one year to the next**.
+* first differences are the change between \orange{one observation and the next};
+* seasonal differences are the change between \orange{one year to the next}.
 \pause
 
 But taking lag 3 differences for yearly data, for example, results in a model which cannot be sensibly interpreted.
 
+
 ## Unit root tests
 
-\alert{Statistical tests to determine the required order of differencing.}
+Statistical tests to determine the required order of differencing.
 
-  1. Augmented Dickey Fuller test: null hypothesis is that the data are non-stationary and non-seasonal.
-  2. Kwiatkowski-Phillips-Schmidt-Shin (KPSS) test: null hypothesis is that the data are stationary and non-seasonal.
+  1. Augmented Dickey Fuller test: null hypothesis is that the data are \orange{non-stationary} and non-seasonal.
+  2. Kwiatkowski-Phillips-Schmidt-Shin (KPSS) test: null hypothesis is that the data are \orange{stationary} and non-seasonal.
   3. Other tests available for seasonal data.
 
+\only<2>{\begin{textblock}{4}(10.2,4)
+\begin{alertblock}{}
+H$_0$: non-stationary
+\end{alertblock}
+\end{textblock}}
+
+\only<2>{\begin{textblock}{3}(12,5.4)
+\begin{alertblock}{}
+H$_0$: stationary
+\end{alertblock}
+\end{textblock}}
+
+
 ## KPSS test
-\fontsize{11}{12}\sf
+\fontsize{9}{10}\sf
 
 ```{r, echo=TRUE}
-google_2018 |>
-  features(Close, unitroot_kpss)
+google_2018 %>%
+   features(Close, unitroot_kpss)
 ```
 
 \pause
 
 ```{r, echo=TRUE}
-google_2018 |>
+google_2018 %>%
   features(Close, unitroot_ndiffs)
 ```
 
 ## Automatically selecting differences
+
+\fontsize{13}{14}\sf
 
 STL decomposition: $y_t = T_t+S_t+R_t$
 
@@ -367,25 +402,16 @@ If $F_s > 0.64$, do one seasonal difference.
 \fontsize{10}{11}\sf
 
 ```{r, echo=TRUE}
-h02 |>
-  mutate(log_sales = log(Cost)) |>
-  features(log_sales, list(unitroot_nsdiffs, feat_stl)) |>
-  select(1:3)
+h02 %>% mutate(log_sales = log(Cost)) %>%
+  features(log_sales, list(unitroot_nsdiffs, feat_stl))
 ```
 
 ## Automatically selecting differences
-\fontsize{9}{10}\sf
+\fontsize{10}{11}\sf
 
 ```{r, echo=TRUE}
-h02 |>
-  mutate(log_sales = log(Cost)) |>
+h02 %>% mutate(log_sales = log(Cost)) %>%
   features(log_sales, unitroot_nsdiffs)
-h02 |>
-  mutate(d_log_sales = difference(log(Cost), 12)) |>
+h02 %>% mutate(d_log_sales = difference(log(Cost), 12)) %>%
   features(d_log_sales, unitroot_ndiffs)
 ```
-
-<!-- ## Your turn
-
-For the `tourism` dataset, compute the total number of trips and find an appropriate differencing (after transformation if necessary) to obtain stationary data.
--->
