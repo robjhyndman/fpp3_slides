@@ -100,6 +100,21 @@ the PACF and ACF.
   * exponential decay in the seasonal lags of the ACF
   * a single significant spike at lag 12 in the PACF.
 
+## How does ARIMA() work for seasonal models?
+
+\begin{block}{A seasonal ARIMA process}
+\[
+\Phi(B)\phi(B)(1-B)^d(1-B)^Dy_{t} = c + \Theta(B)\theta(B)\varepsilon_t
+\]
+Need to select appropriate orders: \alert{$d,D,p,q,P,Q$}, and whether to include the intercept \alert{$c$}.
+\end{block}
+
+\alert{Hyndman and Khandakar (JSS, 2008) algorithm:}
+
+  * Select no.\ differences \alert{$d$} via KPSS test and \alert{$D$} using seasonal strength.
+  * Select \alert{$p,q,P,Q$} and \alert{$c$} by minimising AICc.
+  * Use stepwise search to traverse model space.
+
 ## US leisure employment
 
 ```{r, fig.height=2.45}
@@ -163,7 +178,9 @@ fit |>
 \fontsize{10}{11}\sf
 
 ```{r}
-augment(fit) |> features(.innov, ljung_box, lag = 24, dof = 4)
+augment(fit) |>
+  filter(.model == "auto") |>
+  features(.innov, ljung_box, lag = 24, dof = 4)
 ```
 
 ## US leisure employment
