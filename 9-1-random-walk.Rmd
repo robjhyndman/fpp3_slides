@@ -1,0 +1,110 @@
+---
+title: "9. ARIMA models"
+author: "9.1 Random walk model"
+date: "OTexts.org/fpp3/"
+classoption: aspectratio=169
+titlepage: fpp3title.png
+titlecolor: fpp3red
+toc: false
+output:
+  binb::monash:
+    colortheme: monashwhite
+    fig_width: 7.5
+    fig_height: 2.8
+    keep_tex: no
+    includes:
+      in_header: fpp3header.tex
+---
+
+```{r setup, include=FALSE}
+source("setup.R")
+library(patchwork)
+```
+
+## Example: Google stock price
+
+```{r}
+google_2018 <- gafa_stock |>
+  filter(Symbol == "GOOG", year(Date) == 2018)
+```
+
+## Example: Google stock price
+
+```{r}
+google_2018 |>
+  autoplot(Close) +
+  labs(y = "Closing stock price ($USD)")
+```
+
+## Example: Google stock price
+
+```{r}
+google_2018 |>
+  ACF(Close) |>
+  autoplot()
+```
+
+## Example: Google stock price
+
+```{r}
+google_2018 |>
+  autoplot(difference(Close)) +
+  labs(y = "Change in Google closing stock price ($USD)")
+```
+
+## Example: Google stock price
+
+```{r}
+google_2018 |>
+  ACF(difference(Close)) |>
+  autoplot()
+```
+
+
+## Example: Google stock price 
+
+* The differences are the \orange{day-to-day} changes.
+* Now the series looks just like a white noise series:
+    * No autocorrelations outside the 95% limits.
+* \orange{Conclusion:} The daily change in the Google stock price is essentially a random amount uncorrelated with previous days.
+
+
+## Random walk model
+
+If differenced series is white noise with zero mean:
+
+\begin{block}{}
+\centerline{$y_t-y_{t-1}=\varepsilon_t$ \hspace{0.4cm} or \hspace{0.4cm} $y_t=y_{t-1}+\varepsilon_t$}
+\end{block}\vspace*{-0.3cm}
+where $\varepsilon_t \sim NID(0,\sigma^2)$.
+
+* Very widely used for non-stationary data.
+* This is the model behind the \orange{naïve method}.\pause
+* Random walks typically have:
+    * long periods of apparent trends up or down
+    * Sudden/unpredictable changes in direction \pause
+* Forecast are equal to the last observation (naïve)
+    * future movements up or down are equally likely.
+
+## Random walk with drift model
+
+If differenced series is white noise with non-zero mean:
+
+\begin{block}{}
+\centerline{$y_t-y_{t-1}=c+\varepsilon_t$ \hspace{0.4cm} or \hspace{0.4cm} $y_t=c+y_{t-1}+\varepsilon_t$}
+\end{block}\vspace*{-0.3cm}
+where $\varepsilon_t \sim NID(0,\sigma^2)$.
+
+* $c$ is the \orange{average change} between consecutive observations.
+* If $c>0$, $y_t$ will tend to drift upwards and vice versa.
+* This is the model behind the \orange{drift method}.
+
+## Seasonal differencing
+
+If seasonally differenced data is white noise it implies: 
+\begin{block}{}
+\centerline{$y_t-y_{t-m}=\varepsilon_t$ \hspace{0.4cm} or \hspace{0.4cm} $y_t=y_{t-m}+\varepsilon_t$}
+\end{block}
+where $\varepsilon_t \sim NID(0,\sigma^2)$.
+
+  * The model behind the \orange{seasonal naïve} method.

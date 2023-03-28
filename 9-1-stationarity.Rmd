@@ -1,6 +1,6 @@
 ---
 title: "9. ARIMA models"
-author: "9.1 Stationary and differencing"
+author: "9.1 Stationarity and differencing"
 date: "OTexts.org/fpp3/"
 classoption: aspectratio=169
 titlepage: fpp3title.png
@@ -33,18 +33,6 @@ A \orange{stationary series} is:
 * constant variance
 * no patterns predictable in the long-term
 
-
-## Stationarity
-
-\begin{block}{Definition}
-If $\{y_t\}$ is a \orange{stationary time series}, then for all $s$, the distribution of $(y_t,\dots,y_{t+s})$ does not depend on $t$.
-\end{block}\pause
-
-A \orange{stationary series} is:
-
-* roughly horizontal
-* constant variance
-* no patterns predictable in the long-term
 
 ## Stationary or not
 
@@ -105,9 +93,6 @@ p9 <- aus_production |>
 
 (p1 | p2 | p3) / (p4 | p5 | p6) / (p7 | p8 | p9)
 ```
-
-
-
 
 
 ## Stationarity
@@ -172,47 +157,6 @@ google_2018 |>
 * The differenced series is the \orange{change} between each observation in the original series: $y'_t = y_t - y_{t-1}$.
 * The differenced series will have \orange{only $T-1$ values} since it is not possible to calculate a difference $y_1'$ for the first observation.
 
-## Example: Google stock price 
-
-* The differences are the \orange{day-to-day} changes.
-* Now the series looks just like a white noise series:
-    * No autocorrelations outside the 95% limits.
-    * Large Ljung-Box p-value.  
-* \orange{Conclusion:} The daily change in the Google stock price is essentially a random amount uncorrelated with previous days.
-
-
-## Random walk model
-
-If differenced series is white noise with zero mean:
-
-\begin{block}{}
-\centerline{$y_t-y_{t-1}=\varepsilon_t$ \hspace{0.4cm} or \hspace{0.4cm} $y_t=y_{t-1}+\varepsilon_t$}
-\end{block}\vspace*{-0.3cm}
-where $\varepsilon_t \sim NID(0,\sigma^2)$.
-
-* Very widely used for non-stationary data.
-* This is the model behind the \orange{naïve method}.
-* Random walks typically have:
-    * long periods of apparent trends up or down
-    * Sudden/unpredictable changes in direction
-* Forecast are equal to the last observation (naïve)
-    * future movements up or down are equally likely.
-
-## Random walk with drift model
-
-If differenced series is white noise with non-zero mean:
-
-\begin{block}{}
-\centerline{$y_t-y_{t-1}=c+\varepsilon_t$ \hspace{0.4cm} or \hspace{0.4cm} $y_t=c+y_{t-1}+\varepsilon_t$}
-\end{block}\vspace*{-0.3cm}
-where $\varepsilon_t \sim NID(0,\sigma^2)$.
-
-* $c$ is the \orange{average change} between consecutive observations.
-* If $c>0$, $y_t$ will tend to drift upwards and vice versa.
-* This is the model behind the \orange{drift method}.
-
-\vspace*{10cm}
-
 ## Second-order differencing
 
 Occasionally the differenced data will not appear stationary and it may be necessary to difference the data a second time:\pause
@@ -239,15 +183,6 @@ where $m=$ number of seasons.\pause
 * For quarterly data $m=4$.
 * Seasonally differenced series will have \orange{$T-m$} obs.\pause
   
-\vspace{0.4cm}
-
-If seasonally differenced data is white noise it implies: 
-\begin{block}{}
-\centerline{$y_t-y_{t-m}=\varepsilon_t$ \hspace{0.4cm} or \hspace{0.4cm} $y_t=y_{t-m}+\varepsilon_t$}
-\end{block}
-
-  * The model behind the \orange{seasonal naïve} method.
-
 ## Antidiabetic drug sales
 
 ```{r, echo=TRUE}
@@ -352,66 +287,3 @@ It is important that if differencing is used, the differences are interpretable.
 
 But taking lag 3 differences for yearly data, for example, results in a model which cannot be sensibly interpreted.
 
-
-## Unit root tests
-
-Statistical tests to determine the required order of differencing.
-
-  1. Augmented Dickey Fuller test: null hypothesis is that the data are \orange{non-stationary} and non-seasonal.
-  2. Kwiatkowski-Phillips-Schmidt-Shin (KPSS) test: null hypothesis is that the data are \orange{stationary} and non-seasonal.
-  3. Other tests available for seasonal data.
-
-\only<2>{\begin{textblock}{4}(10.2,4)
-\begin{alertblock}{}
-H$_0$: non-stationary
-\end{alertblock}
-\end{textblock}}
-
-\only<2>{\begin{textblock}{3}(12,5.4)
-\begin{alertblock}{}
-H$_0$: stationary
-\end{alertblock}
-\end{textblock}}
-
-
-## KPSS test
-\fontsize{9}{10}\sf
-
-```{r, echo=TRUE}
-google_2018 %>%
-   features(Close, unitroot_kpss)
-```
-
-\pause
-
-```{r, echo=TRUE}
-google_2018 %>%
-  features(Close, unitroot_ndiffs)
-```
-
-## Automatically selecting differences
-
-\fontsize{13}{14}\sf
-
-STL decomposition: $y_t = T_t+S_t+R_t$
-
-Seasonal strength $F_s = \max\big(0, 1-\frac{\text{Var}(R_t)}{\text{Var}(S_t+R_t)}\big)$
-
-If $F_s > 0.64$, do one seasonal difference.
-
-\fontsize{10}{11}\sf
-
-```{r, echo=TRUE}
-h02 %>% mutate(log_sales = log(Cost)) %>%
-  features(log_sales, list(unitroot_nsdiffs, feat_stl))
-```
-
-## Automatically selecting differences
-\fontsize{10}{11}\sf
-
-```{r, echo=TRUE}
-h02 %>% mutate(log_sales = log(Cost)) %>%
-  features(log_sales, unitroot_nsdiffs)
-h02 %>% mutate(d_log_sales = difference(log(Cost), 12)) %>%
-  features(d_log_sales, unitroot_ndiffs)
-```
