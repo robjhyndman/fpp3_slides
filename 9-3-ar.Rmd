@@ -23,43 +23,107 @@ library(patchwork)
 
 ## Autoregressive models
 
-\begin{block}{Autoregressive (AR) models:}
-$$
-  y_{t} = c + \phi_{1}y_{t - 1} + \phi_{2}y_{t - 2} + \cdots + \phi_{p}y_{t - p} + \varepsilon_{t},
-$$
-where $\varepsilon_t$ is white noise. This is a multiple regression with \textbf{lagged values} of $y_t$ as predictors.
+\fontsize{14}{15}\sf
+
+\begin{block}{Autoregressive model - AR($p$):}
+$$  y_{t} = c + \phi_{1}y_{t - 1} + \phi_{2}y_{t - 2} + \cdots + \phi_{p}y_{t - p} + \varepsilon_{t}, $$
+\vspace{-0.2cm}
+where $\varepsilon_t$ is white noise. This is a multiple regression with \orange{lagged values} of $y_t$ as predictors.
 \end{block}
 
 ```{r arp, echo=FALSE, fig.height=2.4}
 set.seed(1)
-p1 <- tsibble(idx = seq_len(100), sim = 10 + arima.sim(list(ar = -0.8), n = 100), index = idx) |>
-  autoplot(sim) + labs(y = "", title = "AR(1)")
-p2 <- tsibble(idx = seq_len(100), sim = 20 + arima.sim(list(ar = c(1.3, -0.7)), n = 100), index = idx) |>
-  autoplot(sim) + labs(y = "", title = "AR(2)")
+p1 <- tsibble(idx = seq_len(100), sim = 10 + arima.sim(list(ar = -0.8), n = 100), index = idx) %>%
+  autoplot(sim) + labs(y="", title  = "AR(1)")
+p2 <- tsibble(idx = seq_len(100), sim = 20 + arima.sim(list(ar = c(1.3, -0.7)), n = 100), index = idx) %>%
+  autoplot(sim) + labs(y="", title ="AR(2)")
 p1 | p2
 ```
 
 ## AR(1) model
 
 \begin{block}{}
-\centerline{$y_{t} = 18 -0.8 y_{t - 1} + \varepsilon_{t}$}
+\centerline{$y_{t} = -0.8 y_{t - 1} + \varepsilon_{t}$}
 \end{block}
 \rightline{$\varepsilon_t\sim N(0,1)$,\quad $T=100$.}
 
 ```{r, echo=FALSE}
-p1
+tsibble(idx = seq_len(100), sim = arima.sim(list(ar = -0.8), n = 100), index = idx) %>%
+  autoplot(sim) + ylab("") + ggtitle("AR(1)")
+```
+			   
+## AR(1) model
+
+\begin{block}{}
+\centerline{$y_{t}    = \phi_1 y_{t - 1}  +  \varepsilon_{t}$}
+\end{block}
+
+* When $\phi_1=0$, $y_t$ is \orange{equivalent to a WN}
+* When $\phi_1=1$, $y_t$ is \orange{equivalent to a RW}
+* We require $|\phi_1|<1$ for stationarity. The closer $\phi_1$ is to the bounds the more the process wanders above or below it's unconditional mean (zero in this case).
+* When $\phi_1<0$, $y_t$ tends to \orange{oscillate between positive and negative values}.
+
+\vspace{1cm}
+
+## AR(1) model including a constant
+
+\begin{block}{}
+\centerline{$y_{t} = 18-0.8 y_{t - 1} + \varepsilon_{t}$}
+\end{block}
+\rightline{$\varepsilon_t\sim N(0,1)$,\quad $T=100$.}
+
+```{r, echo=FALSE}
+tsibble(idx = seq_len(100), sim = 10+ arima.sim(list(ar = -0.8), n = 100), index = idx) %>%
+  autoplot(sim) + ylab("") + ggtitle("AR(1)")
 ```
 
-## AR(1) model
+## AR(1) model including a constant
 
 \begin{block}{}
   \centerline{$y_{t} = c + \phi_1 y_{t - 1} + \varepsilon_{t}$}
 \end{block}
 
-* When $\phi_1=0$, $y_t$ is **equivalent to WN**
-* When $\phi_1=1$ and $c=0$, $y_t$ is **equivalent to a RW**
-* When $\phi_1=1$ and $c\ne0$, $y_t$ is **equivalent to a RW with drift**
-* When $\phi_1<0$, $y_t$ tends to **oscillate between positive and negative values**.
+* When $\phi_1=0$ and $c=0$, $y_t$ is \orange{equivalent to WN};
+* When $\phi_1=1$ and $c=0$, $y_t$ is \orange{equivalent to a RW};
+* When $\phi_1=1$ and $c\ne0$, $y_t$ is \orange{equivalent to a RW with drift};
+
+\vspace{4cm}
+
+
+## AR(1) model including a constant
+
+\begin{block}{}
+\centerline{$y_{t}    = c+\phi_1 y_{t - 1}  +  \varepsilon_{t}$}
+\end{block}
+
+* $c$ is related to the mean of $y_{t}$. 
+* Let $E(y_{t})=\mu$ then $c=\mu\times(1-\phi_1)$.
+
+\vspace{3cm}
+
+
+* `ARIMA()` takes care of whether you need a constant or not, or you can overide it. 
+
+
+
+## AR(1) model including a constant
+
+* If included estimated model returns `w/ mean`
+
+\fontsize{12}{12}\sf
+
+```
+Series: sim 
+Model: ARIMA(1,0,0) w/ mean 
+
+Coefficients:
+          ar1  constant
+      -0.8381   18.3527
+s.e.   0.0540    0.1048
+
+sigma^2 estimated as 1.11:  log likelihood=-146.7
+AIC=299.4   AICc=299.7   BIC=307.2
+```
 
 ## AR(2) model
 
@@ -68,11 +132,12 @@ p1
 \end{block}
 \rightline{$\varepsilon_t\sim N(0,1)$, \qquad $T=100$.}
 
-```{r, echo=FALSE}
+```{r echo=FALSE}
 p2
 ```
 
 ## Stationarity conditions
+\fontsize{14}{15}\sf
 
 We normally restrict autoregressive models to stationary data, and then some constraints on the values of the parameters are required.
 
@@ -81,6 +146,7 @@ We normally restrict autoregressive models to stationary data, and then some con
 \end{block}\pause
 
 * For $p=1$: $-1<\phi_1<1$.
-* For $p=2$: $-1<\phi_2<1\qquad \phi_2+\phi_1 < 1 \qquad \phi_2 -\phi_1 < 1$.
+* For $p=2$:\newline $-1<\phi_2<1\qquad \phi_2+\phi_1 < 1 \qquad \phi_2 -\phi_1 < 1$.
 * More complicated conditions hold for $p\ge3$.
 * Estimation software takes care of this.
+

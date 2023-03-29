@@ -1,0 +1,150 @@
+---
+title: "9. ARIMA models"
+author: "9.1 Unit root tests"
+date: "OTexts.org/fpp3/"
+classoption: aspectratio=169
+titlepage: fpp3title.png
+titlecolor: fpp3red
+toc: false
+output:
+  binb::monash:
+    colortheme: monashwhite
+    fig_width: 7.5
+    fig_height: 2.8
+    keep_tex: no
+    includes:
+      in_header: fpp3header.tex
+---
+
+```{r setup, include=FALSE}
+source("setup.R")
+library(patchwork)
+```
+
+## Unit root tests
+
+Statistical tests to determine the required order of differencing.
+
+  1. Augmented Dickey Fuller test: null hypothesis is that the data are \orange{non-stationary} and non-seasonal.
+  2. Kwiatkowski-Phillips-Schmidt-Shin (KPSS) test: null hypothesis is that the data are \orange{stationary} and non-seasonal.
+  3. Other tests available for seasonal data.
+
+\only<2>{\begin{textblock}{4}(10.2,4)
+\begin{alertblock}{}
+H$_0$: non-stationary
+\end{alertblock}
+\end{textblock}}
+
+\only<2>{\begin{textblock}{3}(12,5.4)
+\begin{alertblock}{}
+H$_0$: stationary
+\end{alertblock}
+\end{textblock}}
+
+
+## Example: Google stock price
+
+```{r include=FALSE}
+google_2018 <- gafa_stock |>
+  filter(Symbol == "GOOG", year(Date) == 2018)
+```
+
+
+```{r}
+google_2018 |>
+  autoplot(Close) +
+  labs(y = "Closing stock price ($USD)")
+```
+
+## Example: Google stock price
+
+```{r}
+google_2018 |>
+  autoplot(difference(Close)) +
+  labs(y = "Change in Google closing stock price ($USD)")
+```
+
+## KPSS test
+\fontsize{9}{10}\sf
+
+
+
+```{r, echo=TRUE}
+google_2018 %>%
+   features(Close, unitroot_kpss)
+```
+
+\pause
+
+```{r, echo=TRUE}
+google_2018 %>%
+  features(Close, unitroot_ndiffs)
+```
+
+
+## Corticosteroid drug sales
+
+
+```{r include=FALSE}
+h02 <- PBS |>
+  filter(ATC2 == "H02") |>
+  summarise(Cost = sum(Cost) / 1e6)
+```
+
+
+```{r, echo=TRUE}
+h02 |> autoplot(
+  Cost
+)
+```
+
+## Corticosteroid drug sales
+
+```{r, echo=TRUE}
+h02 |> autoplot(
+  log(Cost)
+)
+```
+
+## Corticosteroid drug sales
+
+```{r, echo=TRUE}
+h02 |> autoplot(
+  log(Cost) |> difference(12)
+)
+```
+
+## Corticosteroid drug sales
+
+```{r, echo=TRUE}
+h02 |> autoplot(
+  log(Cost) |> difference(12) |> difference(1)
+)
+```
+
+## Automatically selecting differences
+
+\fontsize{13}{14}\sf
+
+STL decomposition: $y_t = T_t+S_t+R_t$
+
+Seasonal strength $F_s = \max\big(0, 1-\frac{\text{Var}(R_t)}{\text{Var}(S_t+R_t)}\big)$
+
+If $F_s > 0.64$, do one seasonal difference.
+
+\fontsize{10}{11}\sf
+
+```{r, echo=TRUE}
+h02 %>% mutate(log_sales = log(Cost)) %>%
+  features(log_sales, feat_stl)
+```
+
+## Automatically selecting differences
+\fontsize{10}{11}\sf
+
+```{r, echo=TRUE}
+h02 %>% mutate(log_sales = log(Cost)) %>%
+  features(log_sales, unitroot_nsdiffs)
+h02 %>% mutate(d_log_sales = difference(log(Cost), 12)) %>%
+  features(d_log_sales, unitroot_ndiffs)
+```
