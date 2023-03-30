@@ -97,11 +97,9 @@ tsibble(idx = seq_len(100), sim = 10+ arima.sim(list(ar = -0.8), n = 100), index
 \end{block}
 
 * $c$ is related to the mean of $y_{t}$. 
-* Let $E(y_{t})=\mu$ then $c=\mu\times(1-\phi_1)$.
-
-\vspace{3cm}
-
-
+* Let $E(y_{t})=\mu$ \pause
+* $\mu = c + \phi_1\mu$ \pause
+* $\mu = \frac{c}{1-\phi_1}$ \pause
 * `ARIMA()` takes care of whether you need a constant or not, or you can overide it. 
 
 
