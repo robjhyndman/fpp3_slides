@@ -26,7 +26,7 @@ Computer output for regression will always give the $R^2$ value. This is a
 useful summary of the model.
 
 * It is equal to the square of the correlation between $y$ and $\hat y$.
-* It is often called the ``coefficient of determination''.
+* It is often called the "coefficient of determination".
 * It can also be calculated as follows:
 $$R^2 = \frac{\sum(\hat{y}_t - \bar{y})^2}{\sum(y_t-\bar{y})^2}
 $$
@@ -37,7 +37,7 @@ $$
 
 However \dots
 
-* $R^2$  does not allow for ``degrees of freedom''.
+* $R^2$  does not allow for "degrees of freedom".
 
 * Adding *any* variable tends to increase the value of $R^2$, even if that variable is irrelevant.
 \pause
@@ -213,7 +213,7 @@ CV = MSE on \textcolor[HTML]{D55E00}{test sets}\end{block}\end{textblock}}
 
 * If there are a large number of predictors, this is not possible.
 
-* For example, 44 predictors leads to 18 trillion possible models!
+* For example, 50 predictors leads to over 1 quadrillion possible models!
 
 ## Choosing regression variables
 
@@ -230,3 +230,87 @@ has lower CV or AICc.
 * Stepwise regression is not guaranteed to lead to the best possible
 model.
 * Inference on coefficients of final model will be wrong.
+
+
+## Harmonic regression: eating-out expenditure
+
+```{r cafe, echo=TRUE, fig.height=2.6}
+aus_cafe <- aus_retail |>
+  filter(Industry == "Cafes, restaurants and takeaway food services",
+         year(Month) %in% 2004:2018) |>
+  summarise(Turnover = sum(Turnover))
+aus_cafe |> autoplot(Turnover)
+```
+
+## Harmonic regression: eating-out expenditure
+
+\fontsize{7}{7}\sf
+
+```{r digits, include=FALSE}
+options(digits = 6, width=90)
+```
+
+```{r cafefit, dependson=c('digits','cafe'), fig.height=5, echo=TRUE}
+fit <- aus_cafe |>
+  model(
+    K1 = TSLM(log(Turnover) ~ trend() + fourier(K = 1)),
+    K2 = TSLM(log(Turnover) ~ trend() + fourier(K = 2)),
+    K3 = TSLM(log(Turnover) ~ trend() + fourier(K = 3)),
+    K4 = TSLM(log(Turnover) ~ trend() + fourier(K = 4)),
+    K5 = TSLM(log(Turnover) ~ trend() + fourier(K = 5)),
+    K6 = TSLM(log(Turnover) ~ trend() + fourier(K = 6))
+  )
+glance(fit) |> select(.model, r_squared, adj_r_squared, CV, AICc)
+```
+
+## Harmonic regression: eating-out expenditure
+
+```{r, echo=FALSE}
+cafe_plot <- function(...) {
+  fit |>
+    select(...) |>
+    forecast() |>
+    autoplot(aus_cafe) +
+    labs(title = sprintf("Log transformed %s, trend() + fourier(K = %s)", model_sum(select(fit, ...)[[1]][[1]]), deparse(..1))) +
+    geom_label(
+      aes(x = yearmonth("2007 Jan"), y = 4250, label = paste0("AICc = ", format(AICc))),
+      data = glance(select(fit, ...))
+    ) +
+    geom_line(aes(y = .fitted), colour = "red", augment(select(fit, ...))) +
+    ylim(c(1500, 5100))
+}
+```
+
+```{r cafe1, dependson='cafe', fig.height=5, echo=FALSE}
+cafe_plot(K = 1)
+```
+
+## Harmonic regression: eating-out expenditure
+
+```{r cafe2, dependson='cafe', fig.height=5, echo=FALSE}
+cafe_plot(K = 2)
+```
+
+## Harmonic regression: eating-out expenditure
+
+```{r cafe3, dependson='cafe', fig.height=5, echo=FALSE}
+cafe_plot(K = 3)
+```
+
+## Harmonic regression: eating-out expenditure
+
+```{r cafe4, dependson='cafe', fig.height=5, echo=FALSE}
+cafe_plot(K = 4)
+```
+
+## Harmonic regression: eating-out expenditure
+
+```{r cafe5, dependson='cafe', fig.height=5, echo=FALSE}
+cafe_plot(K = 5)
+```
+
+## Harmonic regression: eating-out expenditure
+
+```{r cafe6, dependson='cafe', fig.height=5, echo=FALSE}
+cafe_plot(K = 6)
+```

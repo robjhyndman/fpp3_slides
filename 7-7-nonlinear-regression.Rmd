@@ -20,6 +20,26 @@ output:
 source("setup.R")
 ```
 
+
+## Nonlinear trends
+
+**Quadratic or higher order trend**
+\[
+  x_{1,t} =t,\quad x_{2,t}=t^2,\quad \dots
+\]
+\pause\vspace*{-0.9cm}
+
+\centerline{\alert{\textbf{NOT RECOMMENDED!}}}
+
+**Piecewise linear trend with bend at $\tau$**
+\begin{align*}
+x_{1,t} &= t \\
+x_{2,t} &= \left\{ \begin{array}{ll}
+  0 & t <\tau\\
+  (t-\tau) & t \ge \tau
+\end{array}\right.
+\end{align*}
+
 ## Example: Boston marathon winning times
 
 ```{r, fig.height=2.6, echo=TRUE}

@@ -30,26 +30,6 @@ source("setup.R")
 * $t=1,2,\dots,T$
 * Strong assumption that trend will continue.
 
-## Nonlinear trend
-
-**Piecewise linear trend with bend at $\tau$**
-\begin{align*}
-x_{1,t} &= t \\
-x_{2,t} &= \left\{ \begin{array}{ll}
-  0 & t <\tau\\
-  (t-\tau) & t \ge \tau
-\end{array}\right.
-\end{align*}
-\pause\vspace*{-.6cm}
-
-**Quadratic or higher order trend**
-\[
-  x_{1,t} =t,\quad x_{2,t}=t^2,\quad \dots
-\]
-\pause\vspace*{-0.5cm}
-
-\centerline{\textcolor{orange}{\textbf{NOT RECOMMENDED!}}}
-
 ## Dummy variables
 
 \begin{textblock}{6}(0.4,1.5)
@@ -58,7 +38,26 @@ or `No'), then an equivalent numerical variable can be constructed
 taking value 1 if yes and 0 if no. This is called a \textbf{dummy variable}.
 \end{textblock}
 
-\placefig{7.7}{1.5}{width=5cm}{dummy2}
+\begin{textblock}{4}(11,1.4)
+\begin{block}{}\small\centering
+\begin{tabular}{lr}
+\toprule
+Variable & dummy \\
+\midrule
+Yes & 1 \\
+Yes & 1 \\
+No & 0 \\
+Yes & 1 \\
+No & 0 \\
+No & 0 \\
+Yes & 1 \\
+Yes & 1 \\
+No & 0 \\
+No & 0 \\
+\bottomrule
+\end{tabular}
+\end{block}
+\end{textblock}
 
 ## Dummy variables
 
@@ -66,10 +65,28 @@ taking value 1 if yes and 0 if no. This is called a \textbf{dummy variable}.
 If there are more than two categories, then the variable can
 be coded using several dummy variables (one fewer than the total
 number of categories).
-
 \end{textblock}
 
-\placefig{7.7}{1.5}{width=7.3cm}{dummy3}
+\begin{textblock}{7}(8,1.4)
+\begin{block}{}\small\centering
+\begin{tabular}{lrrrr}
+\toprule
+Day & d1 & d2 & d3 & d4 \\
+\midrule
+Monday     & 1  & 0  & 0  & 0 \\
+Tuesday    & 0  & 1  & 0  & 0 \\
+Wednesday  & 0  & 0  & 1  & 0 \\
+Thursday   & 0  & 0  & 0  & 1 \\
+Friday     & 0  & 0  & 0  & 0 \\
+Monday     & 1  & 0  & 0  & 0 \\
+Tuesday    & 0  & 1  & 0  & 0 \\
+Wednesday  & 0  & 0  & 1  & 0 \\
+Thursday   & 0  & 0  & 0  & 1 \\
+Friday     & 0  & 0  & 0  & 0 \\
+\bottomrule
+\end{tabular}
+\end{block}
+\end{textblock}
 
 ## Beware of the dummy variable trap!
 * Using one dummy for each category gives too many dummy variables!
@@ -163,6 +180,43 @@ fit_beer |>
   autoplot(recent_production)
 ```
 
+## Intervention variables
+
+**Spikes**
+
+* Equivalent to a dummy variable for handling an outlier.
+\pause
+
+**Steps**
+
+* Variable takes value 0 before the intervention and 1 afterwards.
+\pause
+
+**Change of slope**
+
+* Variables take values 0 before the intervention and values $\{1,2,3,\dots\}$ afterwards.
+
+## Holidays
+
+**For monthly data**
+
+* Christmas: always in December so part of monthly seasonal effect
+* Easter: use a dummy variable $v_t=1$ if any part of Easter is in that month, $v_t=0$ otherwise.
+* Ramadan and Chinese new year similar.
+
+## Distributed lags
+
+Lagged values of a predictor.
+
+Example: $x$ is advertising which has a delayed effect
+
+\begin{align*}
+  x_{1} &= \text{advertising for previous month;} \\
+  x_{2} &= \text{advertising for two months previously;} \\
+        & \vdots \\
+  x_{m} &= \text{advertising for $m$ months previously.}
+\end{align*}
+
 ## Fourier series
 
 Periodic seasonality can be handled using pairs of Fourier terms:
@@ -213,7 +267,6 @@ fit <- aus_cafe |>
     K5 = TSLM(log(Turnover) ~ trend() + fourier(K = 5)),
     K6 = TSLM(log(Turnover) ~ trend() + fourier(K = 6))
   )
-glance(fit) |> select(.model, r_squared, adj_r_squared, AICc)
 ```
 
 ## Harmonic regression: eating-out expenditure
@@ -225,10 +278,10 @@ cafe_plot <- function(...) {
     forecast() |>
     autoplot(aus_cafe) +
     labs(title = sprintf("Log transformed %s, trend() + fourier(K = %s)", model_sum(select(fit, ...)[[1]][[1]]), deparse(..1))) +
-    geom_label(
-      aes(x = yearmonth("2007 Jan"), y = 4250, label = paste0("AICc = ", format(AICc))),
-      data = glance(select(fit, ...))
-    ) +
+    #geom_label(
+    #  aes(x = yearmonth("2007 Jan"), y = 4250, label = paste0("AICc = ", format(AICc))),
+    #  data = glance(select(fit, ...))
+    #) +
     geom_line(aes(y = .fitted), colour = "red", augment(select(fit, ...))) +
     ylim(c(1500, 5100))
 }
@@ -268,39 +321,17 @@ cafe_plot(K = 5)
 cafe_plot(K = 6)
 ```
 
-## Intervention variables
 
-**Spikes**
+## Fourier series
 
-* Equivalent to a dummy variable for handling an outlier.
-\pause
+Periodic seasonality can be handled using pairs of Fourier terms:
+$$
+s_{k}(t) = \sin\left(\frac{2\pi k t}{m}\right)\qquad c_{k}(t) = \cos\left(\frac{2\pi k t}{m}\right)
+$$
+$$
+y_t = a + bt + \sum_{k=1}^K \left[\alpha_k s_k(t) + \beta_k c_k(t)\right] + \varepsilon_t$$
 
-**Steps**
-
-* Variable takes value 0 before the intervention and 1 afterwards.
-\pause
-
-**Change of slope**
-
-* Variables take values 0 before the intervention and values $\{1,2,3,\dots\}$ afterwards.
-
-## Holidays
-
-**For monthly data**
-
-* Christmas: always in December so part of monthly seasonal effect
-* Easter: use a dummy variable $v_t=1$ if any part of Easter is in that month, $v_t=0$ otherwise.
-* Ramadan and Chinese new year similar.
-
-## Distributed lags
-
-Lagged values of a predictor.
-
-Example: $x$ is advertising which has a delayed effect
-
-\begin{align*}
-  x_{1} &= \text{advertising for previous month;} \\
-  x_{2} &= \text{advertising for two months previously;} \\
-        & \vdots \\
-  x_{m} &= \text{advertising for $m$ months previously.}
-\end{align*}
+* Every periodic function can be approximated by sums of sin and cos terms for large enough $K$.
+* $K \le m/2$
+* $m$ can be non-integer
+* Particularly useful for large $m$.
