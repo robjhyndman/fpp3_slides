@@ -77,6 +77,24 @@ which is maximized when $(\bm{y}-\bm{X}\bm{\beta})'(\bm{y}-\bm{X}\bm{\beta})$ is
 
 \centerline{\alert{So \textbf{MLE = OLS}.}}
 
+## Cross-validation
+
+\begin{block}{Fitted values}\vspace*{-0.8cm}
+\begin{align*}
+\hat{\bm{y}} &= \bm{X}\hat{\bm{\beta}} \\
+& = \bm{X}(\bm{X}'\bm{X})^{-1}\bm{X}'\bm{y}\\
+&= \bm{H}\bm{y}\qquad\qquad \text{where $\bm{H} = \bm{X}(\bm{X}'\bm{X})^{-1}\bm{X}'$.}\\[-0.9cm]
+\end{align*}
+\end{block}\pause\vspace*{0.3cm}
+
+\begin{block}{LOO cross-validation MSE}
+\centerline{$\text{CV} = \displaystyle\frac1T \sum_{t=1}^T [e_t/(1-h_t)]^2$}
+\begin{itemize}\tightlist
+\item $e_t=$ residual at time $t$ (from fitting model to all data)
+\item $h_1,\dots,h_T$ are the diagonals of $\bm{H}$.
+\end{itemize}
+\end{block}
+
 ## Multiple regression forecasts
 
 \begin{block}{Optimal forecasts}\vspace*{-0.2cm}

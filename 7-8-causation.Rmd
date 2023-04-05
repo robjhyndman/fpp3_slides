@@ -23,11 +23,11 @@ source("setup.R")
 ## Correlation is not causation
 * When $x$ is useful for predicting $y$, it is not necessarily causing $y$.
 
-* e.g., predict number of drownings $y$ using number of ice-creams sold $x$.
+* e.g., predict number of swimmers $y$ using number of ice-creams sold $x$.
 
 * Correlations are useful for forecasting, even when there is no causality.
 
-* Better models usually involve causal relationships (e.g., temperature $x$ and people $z$ to predict drownings $y$).
+* Better models usually involve causal relationships (e.g., temperature $x$ and people $z$ to predict swimmers $y$).
 
 ## Multicollinearity
 In regression analysis, multicollinearity occurs when:
