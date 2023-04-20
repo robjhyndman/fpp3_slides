@@ -44,8 +44,8 @@ That is, the coefficients measure the \orange{marginal effects}.
 \fontsize{10}{11}\sf
 
 ```{r ConsInc, echo=FALSE, fig.width=10, fig.height=5, out.height="92%"}
-us_change %>%
-  pivot_longer(c(Consumption, Income), names_to="Series") %>%
+us_change |>
+  pivot_longer(c(Consumption, Income), names_to="Series") |>
   autoplot(value) +
   labs(y="% change")
 ```
@@ -54,7 +54,7 @@ us_change %>%
 \fontsize{10}{11}\sf
 
 ```{r ConsInc2, echo=FALSE, fig.width=10, fig.height=5, out.height="92%"}
-us_change %>% ggplot(aes(x=Income, y=Consumption)) +
+us_change |> ggplot(aes(x=Income, y=Consumption)) +
   labs(y = "Consumption (quarterly % change)",
        x = "Income (quarterly % change)") +
   geom_point() + geom_smooth(method="lm", se=FALSE)
@@ -64,7 +64,7 @@ us_change %>% ggplot(aes(x=Income, y=Consumption)) +
 
 \fontsize{7.8}{7.8}\sf
 ```{r, echo=TRUE}
-fit_cons <- us_change %>%
+fit_cons <- us_change |>
   model(lm = TSLM(Consumption ~ Income))
 report(fit_cons)
 ```
