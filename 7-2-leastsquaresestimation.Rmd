@@ -1,0 +1,83 @@
+---
+title: "7. Time series regression models"
+author: "7.1 The linear model"
+date: "OTexts.org/fpp3/"
+classoption: aspectratio=169
+titlepage: fpp3title.png
+titlecolor: fpp3red
+toc: false
+output:
+  binb::monash:
+    colortheme: monashwhite
+    fig_width: 7.5
+    fig_height: 3
+    keep_tex: no
+    includes:
+      in_header: fpp3header.tex
+---
+
+```{r setup, include=FALSE}
+source("setup.R")
+```
+
+
+## Least squares estimation
+
+* In practice we need to estimate the coefficients: $\beta_0,\beta_1, \dots, \beta_k$.
+
+$$\sum_{t=1}^T \varepsilon_t^2 = \sum_{t=1}^T (y_t -
+  \beta_{0} - \beta_{1} x_{1,t} - \beta_{2} x_{2,t} - \cdots - \beta_{k} x_{k,t})^2$$ \pause
+
+\vspace{.8cm}
+
+```r
+model(TSLM(y ~ x_1 + x_2 + ... + x_k))
+```
+* Estimated coefficients: $\hat\beta_0, \dots, \hat\beta_k$ 
+
+
+## Example: US consumption expenditure
+
+\fontsize{7}{6.8}\sf
+
+```{r usestim, echo=TRUE}
+fit_consMR <- us_change |>
+  model(lm = TSLM(Consumption ~ Income + Production + Unemployment + Savings))
+report(fit_consMR)
+```
+
+## Fitted values
+
+\vspace{-0.5cm}
+
+$$\hat{y}_t = \hat\beta_{0} + \hat\beta_{1} x_{1,t} + \hat\beta_{2} x_{2,t} + \cdots + \hat\beta_{k} x_{k,t}$$ \pause
+
+```{r usfitted1, echo=FALSE}
+augment(fit_consMR) |>
+  ggplot(aes(x = Quarter)) +
+  geom_line(aes(y = Consumption, colour = "Data")) +
+  geom_line(aes(y = .fitted, colour = "Fitted")) +
+  labs(y = NULL, title = "Percent change in US consumption expenditure") +
+  scale_colour_manual(values = c(Data = "black", Fitted = "#D55E00")) +
+  guides(colour = guide_legend(title = NULL))
+```
+
+## Example: US consumption expenditure
+
+```{r usfitted2, echo=FALSE, message=FALSE, warning=FALSE}
+augment(fit_consMR) |>
+  ggplot(aes(y = .fitted, x = Consumption)) +
+  geom_point() +
+  labs(
+    y = "Fitted (predicted values)",
+    x = "Data (actual values)",
+    title = "Percentage change in US consumption expenditure"
+  ) +
+  geom_abline(intercept = 0, slope = 1)
+```
+
+## Example: US consumption expenditure
+
+```{r, echo=TRUE}
+fit_consMR |> gg_tsresiduals()
+```
