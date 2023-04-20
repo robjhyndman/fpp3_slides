@@ -76,8 +76,18 @@ augment(fit_consMR) |>
   geom_abline(intercept = 0, slope = 1)
 ```
 
-## Example: US consumption expenditure
+## Goodness of fit 
 
-```{r, echo=TRUE}
-fit_consMR |> gg_tsresiduals()
-```
+\begin{block}{Coefficient of determination }
+\[
+R^2 = \frac{\sum(\hat{y}_{t} - \bar{y})^2}{\sum(y_{t}-\bar{y})^2}
+\]
+\end{block}
+
+\begin{block}{Standard error of the regression}
+\[
+  \hat{\sigma}_e=\sqrt{\frac{1}{T-k-1}\sum_{t=1}^{T}{e_t^2}}
+\] where $k$ is the number of predictors in the model.
+\end{block}
+ 
+
