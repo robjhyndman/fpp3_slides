@@ -1,6 +1,6 @@
 ---
 title: "7. Time series regression models"
-author: "7.1 The linear model"
+author: "7.1 Least squares estimation"
 date: "OTexts.org/fpp3/"
 classoption: aspectratio=169
 titlepage: fpp3title.png

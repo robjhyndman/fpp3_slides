@@ -24,24 +24,27 @@ source("setup.R")
 
 ## Ex-ante versus ex-post forecasts
 
- * *Ex ante forecasts* are made using only information available in advance.
+ * \orange{Ex ante forecasts} are made using only information available in advance.
     - require forecasts of predictors
- * *Ex post forecasts* are made using later information on the predictors.
+ * \orange{Ex post forecasts} are made using later information on the predictors.
     - useful for studying behaviour of forecasting models.
 
  * trend, seasonal and calendar variables are all known in advance, so these don't need to be forecast.
+
+## Beer production
+\fontsize{7}{7}\sf
+
+```{r beeryetagain, echo=TRUE}
+recent_production <- aus_production |> filter(year(Quarter) >= 1992)
+recent_production |> model(TSLM(Beer ~ trend() + season())) |> 
+   forecast() |> autoplot(recent_production)
+```
 
 ## Scenario based forecasting
 
  * Assumes possible scenarios for the predictor variables
  * Prediction intervals for scenario based forecasts do not include the uncertainty associated with the future values of the predictor variables.
 
-## Building a predictive regression model {-}
-
- * If getting forecasts of predictors is difficult, you can use lagged predictors instead.
-$$y_{t}=\beta_0+\beta_1x_{1,t-h}+\dots+\beta_kx_{k,t-h}+\varepsilon_{t}$$
-
- * A different model for each forecast horizon $h$.
 
 ## US Consumption
 
@@ -70,3 +73,10 @@ us_change |> autoplot(Consumption) +
   autolayer(fc) +
   labs(title = "US consumption", y = "% change")
 ```
+
+## Building a predictive regression model {-}
+
+ * If getting forecasts of predictors is difficult, you can use lagged predictors instead.
+$$y_{t+h}=\beta_0+\beta_1x_{1,t}+\dots+\beta_kx_{k,t}+\varepsilon_{t+h}$$
+
+ * A different model for each forecast horizon $h$.

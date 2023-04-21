@@ -1,0 +1,83 @@
+---
+title: "7. Time series regression models"
+author: "7.1 Evaluating the regression model"
+date: "OTexts.org/fpp3/"
+classoption: aspectratio=169
+titlepage: fpp3title.png
+titlecolor: fpp3red
+toc: false
+output:
+  binb::monash:
+    colortheme: monashwhite
+    fig_width: 7.5
+    fig_height: 3
+    keep_tex: no
+    includes:
+      in_header: fpp3header.tex
+---
+
+```{r setup, include=FALSE}
+source("setup.R")
+```
+
+
+
+```{r usestim, include=FALSE}
+fit_consMR <- us_change |>
+  model(lm = TSLM(Consumption ~ Income + Production + Unemployment + Savings))
+report(fit_consMR)
+```
+
+## Regression residuals
+
+Residuals are defined as: 
+\begin{align*}
+  e_t &= y_t - \hat{y}_t \\
+      &= y_t - \hat\beta_{0} - \hat\beta_{1} x_{1,t} - \hat\beta_{2} x_{2,t} - \cdots - \hat\beta_{k} x_{k,t}
+\end{align*} \pause
+
+Useful properties
+\[
+\sum_{t=1}^{T}{e_t}=0 \quad\text{and}\quad \sum_{t=1}^{T}{x_{k,t}e_t}=0\qquad\text{for all $k$}.
+\]
+
+## Checking assumptions
+
+- $\varepsilon_t$ have mean zero and are uncorrelated, NID(0,$\sigma^2$).
+- $\varepsilon_t$ are uncorrelated with each $x_{j,t}$.
+
+   - Timeplot, ACF, Histogram (`gg_tsresiduals()`)
+   - Against predictors (non-linearity)
+   - Against fitted values (heteroscedasticity)
+   - Against predictors not in the model (include predictor in the model)
+
+Expect to see scatterplots resembling a horizontal band with no values too far from the band and no patterns such as curvature or increasing spread.
+
+
+## Example: US consumption expenditure
+
+```{r, echo=TRUE}
+fit_consMR |> gg_tsresiduals()
+```
+
+## Example: US consumption expenditure
+
+```{r, echo=FALSE, fig.width=10, fig.height=5, out.height="92%"}
+us_change |>
+  left_join(residuals(fit_consMR), by = "Quarter") |>
+  pivot_longer(Income:Unemployment,
+               names_to = "regressor", values_to = "x") |>
+  ggplot(aes(x = x, y = .resid)) +
+  geom_point() +
+  facet_wrap(. ~ regressor, scales = "free_x") +
+  labs(y = "Residuals", x = "")
+```
+
+## Example: US consumption expenditure
+
+```{r, echo=FALSE, fig.width=10, fig.height=5, out.height="92%"}
+
+augment(fit_consMR) |>
+  ggplot(aes(x = .fitted, y = .resid)) +
+  geom_point() + labs(x = "Fitted", y = "Residuals")
+```
