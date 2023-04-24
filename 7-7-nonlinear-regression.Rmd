@@ -21,17 +21,64 @@ source("setup.R")
 ```
 
 
+## Nonlinear regression
+
+A \orange{log-log} functional form 
+
+$$\log y=\beta_0+\beta_1 \log x +\varepsilon$$
+
+where $\beta_1$ is interpreted as an elasticity (the average percentage change in $y$ resulting from a $1\%$ increase in $x$). \pause
+
+- alternative specifications: log-linear, linear-log.
+- use $\log(x+1)$ if required.
+ 
+
+## Piecewise linear and regression splines
+
+\fontsize{11}{11}\sf
+
+\vspace{-0.6cm}
+
+$$y=f(x) +\varepsilon$$ 
+\vspace{-0.8cm}
+
+where $f$ is a non-linear function. \pause
+
+- For \orange{piecewise linear} let $x_1=x$ and 
+
+\vspace{-0.8cm}
+
+\begin{align*}
+  x_{2} = (x-c)_+ &= \left\{
+             \begin{array}{ll}
+               0 & \text{if } x < c\\
+               x-c &  \text{if } x \ge c.
+             \end{array}\right.
+\end{align*} \pause
+
+\vspace{-0.6cm}
+
+- In general, \orange{linear regression splines} 
+
+\vspace{-0.6cm}
+
+$$x_1=x~~~x_2=(x-c_1)_+~~~\ldots~~~x_k=(x-c_{k-1})_+$$  
+where $c_1,\ldots,c_{k-1}$ are knots. \pause
+
+* Need to select knots: can be difficult and arbitrary. 
+* Automatic knot selection algorithms very slow.
+* Using piecewise cubics achieves a smoother result.
+
+Warning: better fit but forecasting outside the range of the historical data is even more unreliable.
+
 ## Nonlinear trends
 
-**Quadratic or higher order trend**
-\[
-  x_{1,t} =t,\quad x_{2,t}=t^2,\quad \dots
-\]
-\pause\vspace*{-0.9cm}
+\vspace{-0.6cm}
 
-\centerline{\alert{\textbf{NOT RECOMMENDED!}}}
+Piecewise linear trend with bend at $\tau$
 
-**Piecewise linear trend with bend at $\tau$**
+\vspace*{-1.4cm}
+
 \begin{align*}
 x_{1,t} &= t \\
 x_{2,t} &= \left\{ \begin{array}{ll}
@@ -39,6 +86,22 @@ x_{2,t} &= \left\{ \begin{array}{ll}
   (t-\tau) & t \ge \tau
 \end{array}\right.
 \end{align*}
+
+\pause
+
+\vspace*{0.4cm}
+
+Quadratic or higher order trend
+\vspace*{-0.6cm}
+
+\[
+  x_{1,t} =t,\quad x_{2,t}=t^2,\quad \dots
+\] \pause
+
+\vspace*{-0.9cm}
+
+\centerline{\alert{\textbf{NOT RECOMMENDED!}}}
+
 
 ## Example: Boston marathon winning times
 
