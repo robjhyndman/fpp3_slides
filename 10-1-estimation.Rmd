@@ -71,6 +71,8 @@ $x_{1,t},\dots,x_{k,t}$.
 
 ## Estimation
 
+\fontsize{14}{14}\sf
+
 If we minimize $\sum \eta_t^2$ (by using ordinary regression):
 
   1. Estimated coefficients $\hat{\beta}_0,\dots,\hat{\beta}_k$ are no longer optimal as some information ignored;
@@ -82,6 +84,20 @@ If we minimize $\sum \eta_t^2$ (by using ordinary regression):
 
  * Minimizing $\sum \varepsilon_t^2$ avoids these problems.
  * Maximizing likelihood similar to minimizing $\sum \varepsilon_t^2$.
+
+## Stationarity
+
+\begin{block}{Regression with ARMA errors}
+\[
+  y_t = \beta_0 + \beta_1 x_{1,t} + \dots + \beta_k x_{k,t} + \eta_t,
+\]
+where $\eta_t$ is an ARMA process.
+\end{block}
+
+  * All variables in the model \orange{must be stationary}.
+  * If we estimate the model while any of these are non-stationary, the estimated coefficients \orange{can be incorrect}.
+  * \orange{Difference} variables until all stationary.
+  * If necessary, apply same differencing to all variables.
 
 ## Regression with ARIMA errors
 
