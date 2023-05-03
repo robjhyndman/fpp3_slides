@@ -1,6 +1,6 @@
 ---
 title: "10. Dynamic regression models"
-author: "10.1 Estimation"
+author: "10.4 Stochastic and deterministic trends"
 date: "OTexts.org/fpp3/"
 classoption: aspectratio=169
 titlepage: fpp3title.png
@@ -37,12 +37,12 @@ vic_elec_daily <- vic_elec |>
 
 ## Stochastic \& deterministic trends
 
-\begin{block}{Deterministic trend}
+\begin{block}{Deterministic trend}\vspace*{-0.2cm}
 $$ y_t = \beta_0 + \beta_1 t + \eta_t  \qquad \text{where $\eta_t \sim \text{ARIMA}(p,0,q)$}
 $$
 \end{block}\pause
 
-\begin{block}{Stochastic trend}
+\begin{block}{Stochastic trend}\vspace*{-0.2cm}
 $$y_t = \beta_0 + \beta_1 t + \eta_t \qquad \text{where $\eta_t\sim \text{ARIMA}(p,1,q)$}
 $$
 \pause
