@@ -134,13 +134,13 @@ cafe_plot(K = 6)
 
 ## Example: weekly gasoline products
 \fontsize{8}{8}\sf
-```{r, echo = FALSE}
-options(width = 70)
+```{r, echo = FALSE, cache=FALSE}
+options(width = 100)
 ```
 
-```{r gasmodel, echo=TRUE}
+```{r gasmodel, echo=TRUE, cache=FALSE}
 fit <- us_gasoline |>
-  model(ARIMA(Barrels ~ fourier(K = 13) + PDQ(0, 0, 0)))
+  model(K06 = ARIMA(Barrels ~ fourier(K = 6) + PDQ(0, 0, 0)))
 report(fit)
 ```
 
@@ -151,65 +151,4 @@ forecast(fit, h = "3 years") |>
   autoplot(us_gasoline)
 ```
 
-## 5-minute call centre volume
-\fontsize{10}{10}\sf
 
-```{r calls, echo=TRUE, fig.height=4}
-(calls <- readr::read_tsv("http://robjhyndman.com/data/callcenter.txt") |>
-  rename(time = `...1`) |>
-  pivot_longer(-time, names_to = "date", values_to = "volume") |>
-  mutate(date = as.Date(date, format = "%d/%m/%Y"),
-        datetime = as_datetime(date) + time) |>
-  as_tsibble(index = datetime))
-```
-
-## 5-minute call centre volume
-
-```{r calls-plot, echo=TRUE, fig.height=3}
-calls |>
-  fill_gaps() |>
-  autoplot(volume)
-```
-
-## 5-minute call centre volume
-
-```{r calls-season, echo=TRUE}
-calls |>
-  fill_gaps() |>
-  gg_season(volume, period = "day", alpha = 0.1) +
-  guides(colour = FALSE)
-```
-
-## 5-minute call centre volume
-\fontsize{8}{8}\sf
-
-```{r callsmodel, echo=TRUE}
-calls_mdl <- calls |>
-  mutate(idx = row_number()) |>
-  update_tsibble(index = idx)
-fit <- calls_mdl |>
-  model(ARIMA(volume ~ fourier(169, K = 10) + pdq(d = 0) + PDQ(0, 0, 0)))
-report(fit)
-```
-
-## 5-minute call centre volume
-
-```{r callsres, echo=TRUE, fig.height=4}
-gg_tsresiduals(fit, lag = 338)
-```
-
-## 5-minute call centre volume
-
-```{r callsf, echo=TRUE, fig.height=3.2}
-fit |>
-  forecast(h = 1690) |>
-  autoplot(calls_mdl)
-```
-
-## 5-minute call centre volume
-
-```{r callsf2, echo=TRUE, fig.height=3.2}
-fit |>
-  forecast(h = 1690) |>
-  autoplot(filter(calls_mdl, idx > 25000))
-```
