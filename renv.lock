@@ -1924,6 +1924,17 @@
       ],
       "Hash": "c19df082ba346b0ffa6f833e92de34d1"
     },
+    "seasonal": {
+      "Package": "seasonal",
+      "Version": "1.9.0",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "x13binary"
+      ],
+      "Hash": "afe35a1008ccd72e8e5faa0745bf03dd"
+    },
     "sf": {
       "Package": "sf",
       "Version": "1.0-15",
@@ -2323,6 +2334,13 @@
         "R"
       ],
       "Hash": "5d4545e140e36476f35f20d0ca87963e"
+    },
+    "x13binary": {
+      "Package": "x13binary",
+      "Version": "1.1.60",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Hash": "0b557d0b8098fe6e1819a221e498df55"
     },
     "xfun": {
       "Package": "xfun",
